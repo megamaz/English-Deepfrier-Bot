@@ -1,4 +1,4 @@
-import json, discord, googletrans, asyncio
+import json, discord, googletrans, asyncio, typing
 from discord.ext import commands
 from pathlib import Path
 
@@ -8,10 +8,10 @@ def get_local_path(filename):
 
 # All "with open()" are to be used with UTF-8 encoding. 
 with open(get_local_path('data.json'), 'r', encoding='utf-8') as f:
-    data = json.load(f)
+    data : typing.Dict = json.load(f)
 
 with open(get_local_path('userdata.json'), 'r', encoding='utf-8') as f2:
-    userData = json.load(f2)
+    userData : typing.Dict = json.load(f2)
 
 client = commands.Bot('DPF!', case_insensitive=True, help_command=None)
 isprocess = False
@@ -171,7 +171,7 @@ async def Deepfry(ctx):
             else:
                 UpdateUserQueue(ctx)
                 
-                await ctx.send("You have successfully been queued! Type `DPF!Queue` for your queue info.")
+                await ctx.send("You have successfully been queued into position {0}! Type `DPF!Queue` for your queue info.".format(userData[str(ctx.message.author.id)]["PositionInQueue"]))
     else:
         await ctx.send("You have not accepted to have your data stored. When you accept, you accept that...")
         message = await ctx.send(agreementtext)
@@ -242,9 +242,10 @@ async def Cancel(ctx):
             userData["QueueLength"] -= 1
             
             for z in userData:
-                if userData[z]["PositionInQueue"] > userData[str(ctx.message.author.id)]["PositionInQueue"]:
-                    if bool(userData[z]["IsQueued"]):
-                        userData[z]["PositionInQueue"] -= 1
+                if z != "QueueLength":
+                    if userData[z]["PositionInQueue"] > userData[str(ctx.message.author.id)]["PositionInQueue"]:
+                        if bool(userData[z]["IsQueued"]):
+                            userData[z]["PositionInQueue"] -= 1
             
             userData[str(ctx.message.author.id)]["PositionInQueue"] = 0
             with open(get_local_path('userdata.json'), 'w', encoding='utf-8') as canceljob:
