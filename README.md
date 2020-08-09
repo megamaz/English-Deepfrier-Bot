@@ -1,4 +1,4 @@
-![Google Translate Logo](https://www.logolynx.com/images/logolynx/ff/ffcc7485181df70050c7151a4d119725.png)
+![Google Translate Logo (deepfried)](https://media.discordapp.net/attachments/741078845750247445/742101680606412820/Translate2.png?width=1282&height=403)
 
 # EnglishDeepfrierBot
  Deepfries English using Google Translate's SDK.
