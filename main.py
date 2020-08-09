@@ -6,6 +6,7 @@ from pathlib import Path
 def get_local_path(filename):
     return Path(__file__).parents[0] / filename
 
+# All "with open()" are to be used with UTF-8 encoding. 
 with open(get_local_path('data.json'), 'r', encoding='utf-8') as f:
     data = json.load(f)
 
