@@ -131,7 +131,7 @@ async def on_ready():
             await client.change_presence(activity=discord.Game(name="{0} Registered users | DPF!Help".format(len(userData)-1)))
             await asyncio.sleep(10)
         for _ in range(6):
-            await client.change_presence(activity=discord.Game(name="Last Deepfry: '{0}' | DPF!Help".format(lastranslate)))
+            await client.change_presence(activity=discord.Game(name="Last Deepfry: {0} | DPF!Help".format(lastranslate)))
             await asyncio.sleep(10)
 
 @client.command()
