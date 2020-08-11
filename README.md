@@ -10,4 +10,4 @@
 ### Extra notes
 Please do not download the code and pass it as your own.\
 All code written by [megamaz](https://github.com/megamaz/)\
-**if you would like to contribute, you can do pull requests.**\
+**if you would like to contribute, you can do pull requests.**
