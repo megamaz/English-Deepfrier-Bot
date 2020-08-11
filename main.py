@@ -263,16 +263,37 @@ async def Agreement(ctx):
 @client.command()
 async def Help(ctx):
     global color
-    await ctx.send(embed=discord.Embed(title="Help", colour=color)
-    .add_field(name='DPF!Deepfry [word/sentence]', value="Will deepfry the English put in as the\n `word/sentence`", inline=False)
-    .add_field(name="DPF!Accept", value="Accept the agreement", inline=False)
-    .add_field(name="DPF!Agreement", value="Shows the agreement", inline=False)
-    .add_field(name="DPF!Clear", value="Clears user data", inline=False)
-    .add_field(name="DPF!Queue / DPF!Pos", value="Gives you your queue info\n (will only send if user is queued.)", inline=False)
-    .add_field(name="DPF!Help", value="Gives you this list", inline=False)
-    .add_field(name="DPF!Cancel", value="Cancels your item in queue. (if you\n wish to change your sentence, just use\n the DPF!Deepfry command.)\n")
-    .add_field(name="Exetra Notes:", value="1. You will get better results with sentences\nrather than words\n2. If you are queued, you can change your\nrequest using the `DPF!Deepfry` command", inline=False)
-    .set_footer(text='English Deepfrier', icon_url="https://media.discordapp.net/attachments/741078845750247445/741410062861467718/Deepfry.png?width=677&height=677"))
+    commands = ['deepfry', 'accept', 'agreement', 'clear', 'queue', 'pos', 'help', 'cancel']
+    if len(ctx.message.content.split()) == 1:
+        await ctx.send(embed=discord.Embed(title="Help", colour=color)
+        .add_field(name='DPF!Deepfry [word/sentence]', value="Will deepfry the English put in as the\n `word/sentence`", inline=False)
+        .add_field(name="DPF!Accept", value="Accept the agreement", inline=False)
+        .add_field(name="DPF!Agreement", value="Shows the agreement", inline=False)
+        .add_field(name="DPF!Clear", value="Clears user data", inline=False)
+        .add_field(name="DPF!Queue / DPF!Pos", value="Gives you your queue info\n (will only send if user is queued.)", inline=False)
+        .add_field(name="DPF!Help", value="Gives you this list", inline=False)
+        .add_field(name="DPF!Cancel", value="Cancels your item in queue. (if you\n wish to change your sentence, just use\n the DPF!Deepfry command.)\n")
+        .add_field(name="Exetra Notes:", value="1. You will get better results with sentences\nrather than words\n2. If you are queued, you can change your\nrequest using the `DPF!Deepfry` command", inline=False)
+        .set_footer(text='English Deepfrier', icon_url="https://media.discordapp.net/attachments/741078845750247445/741410062861467718/Deepfry.png?width=677&height=677"))
+    else:
+        if ctx.message.content.split()[1].lower() not in commands:
+            await ctx.send("Could not find this command.")
+        else:
+            command = ctx.message.content.split()[1].lower()
+            if command == "deepfry":
+                await ctx.send("Deepfry a sentence or word using this command!\n*e.x: DPF!Deepfry I am a human*")
+            elif command == "accept":
+                await ctx.send("Accept the agreement using this command.\n*e.x: DPF!Accept*")
+            elif command == "agreement":
+                await ctx.send("Get the agreement.\n*e.x: DPF!Agreement*")
+            elif command == "clear":
+                await ctx.send("Clears your user data.\n*e.x: DPF!Clear*")
+            elif command == "queue" or command == "pos":
+                await ctx.send("Checks your position in queue.\n*e.x: DPF!Pos / DPF!Queue*")
+            elif command == 'help':
+                await ctx.send("I mean, this one is obvious. You're using it right now.")
+            elif command == 'cancel':
+                await ctx.send("Cancel your queued message.\n*e.x: DPF!Cancel*")
 
 print("Starting...")
 client.run(data["Token"])
