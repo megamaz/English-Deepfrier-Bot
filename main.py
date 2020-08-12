@@ -170,7 +170,6 @@ async def Deepfry(ctx):
                     json.dump(userData, updateQueuedMess)
             else:
                 UpdateUserQueue(ctx)
-                
                 await ctx.send("You have successfully been queued into position {0}! Type `DPF!Queue` for your queue info.".format(userData[str(ctx.message.author.id)]["PositionInQueue"]))
     else:
         await ctx.send("You have not accepted to have your data stored. When you accept, you accept that...")
@@ -228,6 +227,11 @@ async def Clear(ctx):
         if bool(userData[str(ctx.message.author.id)]["IsQueued"]):
             userData["QueueLength"] -= 1
         
+            for y in userData:
+                if y != "QueueLength":
+                    if y["PositionInQueue"] < userData[str(ctx.message.author.id)]["PositionInQueue"] and bool(y["IsQueued"]):
+                        y["PositionInQueue"] -= 1
+
         userData.pop(str(ctx.message.author.id))
         with open(get_local_path('userdata.json'), 'w', encoding='utf-8') as cleardata:
             json.dump(userData, cleardata)
