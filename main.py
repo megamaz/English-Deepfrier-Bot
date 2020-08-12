@@ -142,8 +142,8 @@ async def Deepfry(ctx):
         if len(str(ctx.message.content).split()) == 1:
             await ctx.send("Please include sentence to deepfry.")
             return
-        if len(ctx.message.mentions) != 0:
-            await ctx.send("Please do not mention anyone in your message.")
+        if "@" in [char for char in ctx.message.content] or "#" in [char for char in ctx.message.content]:
+            await ctx.send("Please only include words in your message (no mentions, channels etc...) ")
             return
         if not isprocess:
             await ctx.send("I will deepfry your message right now. Give me about 5min.")
