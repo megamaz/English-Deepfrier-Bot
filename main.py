@@ -23,9 +23,10 @@ a) user ID Will be saved for queueing system
 b) be pinged whenever deepfrying is complete
 c) Message data will be stored
 d) Channel ID will be stored
-e) To have your deepfry be put as a status
+e) Username will be saved
+f) To have your deepfry be put as a status
 
-Data of a-d will not be shared. only data from e will be publicly shared with no context, only final result.
+Data of a-e will not be shared. only data from f will be publicly shared with no context, only final result.
 (Example: Playing **Last Deeprfy: 'It has grown' | DPF!Help**)
 __You will always be able to clear your data by using `DPF!Clear`__"""
 with open(get_local_path('latest.txt'), 'r', encoding='utf-8') as getlatest:
@@ -186,7 +187,8 @@ async def Accept(ctx):
         "IsQueued":False,
         "QueueMess": "",
         "QueueChann":"",
-        "UID":str(ctx.message.author.id)
+        "UID":str(ctx.message.author.id),
+        "Username":str(ctx.message.author)
         }
         
         with open(get_local_path('userdata.json'), 'w', encoding='utf-8') as f3:
@@ -305,6 +307,17 @@ async def on_message(message):
     if message.content.startswith('DPF!') and message.content.split()[0].split("!")[1].lower() not in commands:
         await message.channel.send("Command '{0}' not found.".format(message.content.split()[0].split("!")[1].lower()))
     
+    if userData.get(str(message.author.id)) != None:
+        if userData[str(message.author.id)].get("Username") != None:
+            if userData[str(message.author.id)]["Username"] != str(message.author):
+                userData[str(message.author.id)]["Username"] = str(message.author)
+                with open(get_local_path('userdata.json'), 'w', encoding='utf-8') as updateusername:
+                    json.dump(userData, updateusername)
+        else:
+            userData[str(message.author.id)]["Username"] = str(message.author)
+            with open(get_local_path('userdata.json'), 'w', encoding='utf-8') as updateusername:
+                json.dump(userData, updateusername)
+
     await client.process_commands(message)
     
 client.run(data["Token"])
