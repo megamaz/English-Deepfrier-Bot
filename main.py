@@ -299,5 +299,12 @@ async def Help(ctx):
             elif command == 'cancel':
                 await ctx.send("Cancel your queued message.\n*e.x: DPF!Cancel*")
 
-print("Starting...")
+@client.event
+async def on_message(message):
+    commands = ['deepfry', 'accept', 'agreement', 'clear', 'queue', 'pos', 'help', 'cancel']
+    if message.content.startswith('DPF!') and message.content.split()[0].split("!")[1].lower() not in commands:
+        await message.channel.send("Command '{0}' not found.".format(message.content.split()[0].split("!")[1].lower()))
+    
+    await client.process_commands(message)
+    
 client.run(data["Token"])
