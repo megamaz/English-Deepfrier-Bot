@@ -40,7 +40,14 @@ def UpdateLatest(latest):
         update.write(latest)
         update.close()
     
-    
+def UpdateJ(j):
+    with open(get_local_path('J.txt'), 'r') as GetJ:
+        if j in GetJ.read().splitlines():
+            return
+    with open(get_local_path('J.txt'), 'a', encoding="utf-8") as J:
+        J.write(j + '\n')
+        J.close()
+
 def UpdateUserQueue(ctx):
     with open(get_local_path('userdata.json'), 'w', encoding='utf-8') as updateQueue:
         userData["QueueLength"] += 1
@@ -98,6 +105,9 @@ async def DeepfryMain(channelID, message, authorID):
         await ctx.send(f'<@{authorID}>! Your deepfrying has finished.')
         await ctx.send(f'{message} -> {last}')
         UpdateLatest(last)
+        if last.startswith("J!"):
+            await ctx.send("Congratulations! You have found one of J's... Achievements? It will be added to the list. use `DPF!J` to see their achievements.")
+            UpdateJ(last)
         await asyncio.sleep(3)
     authorID = str(authorID)
     userData[authorID]["IsQueued"] = False
@@ -269,7 +279,7 @@ async def Agreement(ctx):
 @client.command()
 async def Help(ctx):
     global color
-    commands = ['deepfry', 'accept', 'agreement', 'clear', 'queue', 'pos', 'help', 'cancel']
+    commands = ['deepfry', 'accept', 'agreement', 'clear', 'queue', 'pos', 'help', 'cancel', 'j']
     if len(ctx.message.content.split()) == 1:
         await ctx.send(embed=discord.Embed(title="Help", colour=color)
         .add_field(name='DPF!Deepfry [word/sentence]', value="Will deepfry the English put in as the\n `word/sentence`", inline=False)
@@ -301,9 +311,14 @@ async def Help(ctx):
             elif command == 'cancel':
                 await ctx.send("Cancel your queued message.\n*e.x: DPF!Cancel*")
 
+@client.command()
+async def J(ctx):
+    with open(get_local_path('J.txt'), 'r') as J:
+        await ctx.send(embed=discord.Embed(title="J's achievements:", description=J.read(), colour=color))
+
 @client.event
 async def on_message(message):
-    commands = ['deepfry', 'accept', 'agreement', 'clear', 'queue', 'pos', 'help', 'cancel']
+    commands = ['deepfry', 'accept', 'agreement', 'clear', 'queue', 'pos', 'help', 'cancel', 'j']
     if message.content.startswith('DPF!') and message.content.split()[0].split("!")[1].lower() not in commands:
         await message.channel.send("Command '{0}' not found.".format(message.content.split()[0].split("!")[1].lower()))
     
