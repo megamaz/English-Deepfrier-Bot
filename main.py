@@ -135,15 +135,15 @@ async def on_ready():
         json.dump(userData, clearqueue)
     print(f"{data['Name']} is online and usable")
     while True:
-        for _ in range(6):
+        for _ in range(10):
             await client.change_presence(activity=discord.Game(name="Queue: {0} | DPF!Help".format(userData["QueueLength"])))
-            await asyncio.sleep(10)
-        for _ in range(6):
+            await asyncio.sleep(6)
+        for _ in range(10):
             await client.change_presence(activity=discord.Game(name="{0} Registered users | DPF!Help".format(len(userData)-1)))
-            await asyncio.sleep(10)
-        for _ in range(6):
+            await asyncio.sleep(6)
+        for _ in range(10):
             await client.change_presence(activity=discord.Game(name="Last Deepfry: {0} | DPF!Help".format(lastranslate)))
-            await asyncio.sleep(10)
+            await asyncio.sleep(6)
 
 @client.command()
 async def Deepfry(ctx):
