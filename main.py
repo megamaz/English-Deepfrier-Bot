@@ -131,7 +131,7 @@ async def on_ready():
             userData[x]["QueueChann"] = ""
         json.dump(userData, clearqueue)
     print(f"{data['Name']} is online and usable")
-    startchann = client.get_channel(741078845750247445)
+    startchann = client.get_channel(data["Test Channel"])
     await startchann.send("Ran on_ready")
     await startchann.send("was bot already running: {0}".format(isrunning))
     if not isrunning:
@@ -148,8 +148,9 @@ async def on_ready():
                 await asyncio.sleep(6)
 
 @client.event
-async def on_disconnect():
-    print("bot has been disconnected")
+async def on_error(event):
+    error = client.get_channel(data["Test Channel"])
+    await error.send("@megamaz#1020 i bugged lmao {0}".format(event))
 @client.command()
 async def Deepfry(ctx):
     global agreementtext
