@@ -14,6 +14,7 @@ client = commands.Bot('DPF!', case_insensitive=True, help_command=None)
 isprocess = False
 currentuser = ""
 lastranslate = ''
+isrunning = False
 agreementtext = """
 
 a) user ID Will be saved for queueing system
@@ -118,6 +119,7 @@ async def DeepfryMain(channelID, message, authorID):
 async def on_ready():
     global userData
     global lastranslate
+    global isrunning
     with open(get_local_path('userdata.json'), 'w', encoding='utf-8') as clearqueue:
         userData["QueueLength"] = 0
         for x in userData:
@@ -129,16 +131,18 @@ async def on_ready():
             userData[x]["QueueChann"] = ""
         json.dump(userData, clearqueue)
     print(f"{data['Name']} is online and usable")
-    while True:
-        for _ in range(10):
-            await client.change_presence(activity=discord.Game(name="Queue: {0} | DPF!Help".format(userData["QueueLength"])))
-            await asyncio.sleep(6)
-        for _ in range(10):
-            await client.change_presence(activity=discord.Game(name="{0} Registered users | DPF!Help".format(len(userData)-1)))
-            await asyncio.sleep(6)
-        for _ in range(10):
-            await client.change_presence(activity=discord.Game(name="Last Deepfry: {0} | DPF!Help".format(lastranslate)))
-            await asyncio.sleep(6)
+    if not isrunning:
+        isrunning = True
+        while True:
+            for _ in range(10):
+                await client.change_presence(activity=discord.Game(name="Queue: {0} | DPF!Help".format(userData["QueueLength"])))
+                await asyncio.sleep(6)
+            for _ in range(10):
+                await client.change_presence(activity=discord.Game(name="{0} Registered users | DPF!Help".format(len(userData)-1)))
+                await asyncio.sleep(6)
+            for _ in range(10):
+                await client.change_presence(activity=discord.Game(name="Last Deepfry: {0} | DPF!Help".format(lastranslate)))
+                await asyncio.sleep(6)
 
 @client.command()
 async def Deepfry(ctx):
