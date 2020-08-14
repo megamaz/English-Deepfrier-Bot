@@ -41,7 +41,7 @@ def UpdateLatest(latest):
         update.close()
     
 def UpdateJ(j):
-    with open(get_local_path('J.txt'), 'r') as GetJ:
+    with open(get_local_path('J.txt'), 'r', encoding='utf-8') as GetJ:
         if j in GetJ.read().splitlines():
             return
     with open(get_local_path('J.txt'), 'a', encoding="utf-8") as J:
@@ -313,7 +313,7 @@ async def Help(ctx):
 
 @client.command()
 async def J(ctx):
-    with open(get_local_path('J.txt'), 'r') as J:
+    with open(get_local_path('J.txt'), 'r', encoding='utf-8') as J:
         await ctx.send(embed=discord.Embed(title="J's achievements:", description=J.read(), colour=color))
 
 @client.event
