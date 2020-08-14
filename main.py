@@ -147,10 +147,7 @@ async def on_ready():
                 await client.change_presence(activity=discord.Game(name="Last Deepfry: {0} | DPF!Help".format(lastranslate)))
                 await asyncio.sleep(6)
 
-@client.event
-async def on_error(event):
-    error = client.get_channel(data["Test Channel"])
-    await error.send("@megamaz#1020 i bugged lmao {0}".format(event))
+
 @client.command()
 async def Deepfry(ctx):
     global agreementtext
