@@ -2,17 +2,14 @@ import json, discord, googletrans, asyncio, typing
 from discord.ext import commands
 from pathlib import Path
 
-
 def get_local_path(filename):
     return Path(__file__).parents[0] / filename
 
 # All "with open()" are to be used with UTF-8 encoding. 
 with open(get_local_path('data.json'), 'r', encoding='utf-8') as f:
     data : typing.Dict = json.load(f)
-
 with open(get_local_path('userdata.json'), 'r', encoding='utf-8') as f2:
     userData : typing.Dict = json.load(f2)
-
 client = commands.Bot('DPF!', case_insensitive=True, help_command=None)
 isprocess = False
 currentuser = ""
@@ -31,7 +28,6 @@ Data of a-e will not be shared. only data from f will be publicly shared with no
 __You will always be able to clear your data by using `DPF!Clear`__"""
 with open(get_local_path('latest.txt'), 'r', encoding='utf-8') as getlatest:
     lastranslate = getlatest.read()
-
 translator = googletrans.Translator()
 
 color = discord.Color.from_rgb(54, 171, 255)
@@ -75,8 +71,7 @@ def UpdateQueue():
                     userData[x]["PositionInQueue"] -= 1
                 else:
                     userData[x]["PositionInQueue"] = 0
-                    
-        json.dump(userData, updatePublicQueue)
+        json.dump(userData, updatePublicQueue)    
         return returnvalue
 
 async def DeepfryMain(channelID, message, authorID):
@@ -103,7 +98,7 @@ async def DeepfryMain(channelID, message, authorID):
     if not failed:
         last = translator.translate(current.text, dest='en').text
         await ctx.send(f'<@{authorID}>! Your deepfrying has finished.')
-        await ctx.send(f'{message} -> {last}')
+        await ctx.send(f'{message} → {last}')
         UpdateLatest(last)
         if last.startswith("J!"):
             await ctx.send("Congratulations! You have found one of J's... Achievements? It will be added to the list. use `DPF!J` to see their achievements.")
