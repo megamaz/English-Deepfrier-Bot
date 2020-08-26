@@ -104,6 +104,7 @@ async def DeepfryMain(channelID, message, authorID):
         if last.startswith("J!"):
             await ctx.send("Congratulations! You have found one of J's... Achievements? It will be added to the list. use `DPF!J` to see their achievements.")
             UpdateJ(last)
+            await debugchannel("User had message with J")
         await asyncio.sleep(3)
     authorID = str(authorID)
     userData[authorID]["IsQueued"] = False
@@ -120,6 +121,7 @@ async def on_ready():
     global userData
     global lastranslate
     global isrunning
+    global debugchannel
     with open(get_local_path('userdata.json'), 'w', encoding='utf-8') as clearqueue:
         userData["QueueLength"] = 0
         for x in userData:
@@ -132,6 +134,7 @@ async def on_ready():
         json.dump(userData, clearqueue)
     print(f"{data['Name']} is online and usable")
     startchann = client.get_channel(data["Test Channel"])
+    debugchannel = lambda x : startchann.send(x)
     await startchann.send("Ran on_ready")
     await startchann.send("was bot already running: {0}".format(isrunning))
     if not isrunning:
@@ -140,12 +143,15 @@ async def on_ready():
             for _ in range(10):
                 await client.change_presence(activity=discord.Game(name="Queue: {0} | DPF!Help".format(userData["QueueLength"])))
                 await asyncio.sleep(6)
+                
             for _ in range(10):
                 await client.change_presence(activity=discord.Game(name="{0} Registered users | DPF!Help".format(len(userData)-1)))
                 await asyncio.sleep(6)
+                
             for _ in range(10):
                 await client.change_presence(activity=discord.Game(name="Last Deepfry: {0} | DPF!Help".format(lastranslate)))
                 await asyncio.sleep(6)
+                
 
 
 @client.command()
@@ -161,6 +167,7 @@ async def Deepfry(ctx):
             return
         if not isprocess:
             await ctx.send("I will deepfry your message right now. Give me about 5min.")
+            await debugchannel(f"Queue was empty and started user deepfry `{' '.join(ctx.message.content.split()[1:])}`")
             currentuser = str(ctx.message.author.id)
             await DeepfryMain(ctx.message.channel.id, " ".join(ctx.message.content.split()[1:]), ctx.message.author.id)
 
@@ -170,6 +177,7 @@ async def Deepfry(ctx):
                 if queued != "":
                     start = client.get_channel(int(queued["QueueChann"]))
                     await start.send(f'<@{queued["UID"]}>! I am starting your long awaited deepfry of `{queued["QueueMess"]}`!')
+                    await debugchannel(f"Continued Deepfry queue: `{' '.join(ctx.message.content.split()[1:])}`")
                     await DeepfryMain(start.id, userData[queued["UID"]]["QueueMess"], queued["UID"])
                 else:
                     break
@@ -251,6 +259,7 @@ async def Clear(ctx):
         with open(get_local_path('userdata.json'), 'w', encoding='utf-8') as cleardata:
             json.dump(userData, cleardata)
         await ctx.send("User data successfuly cleared.")
+        await debugchannel(f"Cleared Data of 1 user")
 @client.command()
 async def Cancel(ctx):
     if userData.get(str(ctx.message.author.id)) != None:
@@ -271,6 +280,7 @@ async def Cancel(ctx):
                 json.dump(userData, canceljob)
 
             await ctx.send("Your queued message has been canceled.")
+            await debugchannel("Canceled queue of 1 user")
         else:
             await ctx.send("There is nothing to cancel.")
     else:
