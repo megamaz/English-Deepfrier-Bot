@@ -312,8 +312,7 @@ async def Help(ctx):
         .add_field(name="DPF!Queue / DPF!Pos", value="Gives you your queue info\n (will only send if user is queued.)", inline=False)
         .add_field(name="DPF!Help", value="Gives you this list", inline=False)
         .add_field(name="DPF!Cancel", value="Cancels your item in queue. (if you\n wish to change your sentence, just use\n the DPF!Deepfry command.)\n")
-        .add_field(name="Exetra Notes:", value="1. You will get better results with sentences\nrather than words\n2. If you are queued, you can change your\nrequest using the `DPF!Deepfry` command", inline=False)
-        .set_footer(text='English Deepfrier', icon_url="https://media.discordapp.net/attachments/741078845750247445/741410062861467718/Deepfry.png?width=677&height=677"))
+        .add_field(name="Exetra Notes:", value="1. You will get better results with sentences\nrather than words\n2. If you are queued, you can change your\nrequest using the `DPF!Deepfry` command", inline=False))
     else:
         if ctx.message.content.split()[1].lower() not in commands:
             await ctx.send("Could not find this command.")
