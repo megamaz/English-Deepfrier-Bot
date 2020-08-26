@@ -26,7 +26,8 @@ f) To have your deepfry be put as a status
 
 Data of a-e will not be shared. only data from f will be publicly shared with no context, only final result.
 (Example: Playing **Last Deeprfy: 'It has grown' | DPF!Help**)
-__You will always be able to clear your data by using `DPF!Clear`__"""
+__You will always be able to clear your data by using `DPF!Clear`__
+if you have any questions you can join the support server: [there's no support server]"""
 with open(get_local_path('latest.txt'), 'r', encoding='utf-8') as getlatest:
     lastranslate = getlatest.read()
 translator = googletrans.Translator()
@@ -94,6 +95,7 @@ async def DeepfryMain(channelID, message, authorID):
         if last == '':
             await ctx.send(f"<@{authorID}> your translation failed! Please try another one / later :(")
             failed = True
+            await debugchannel("Failed translation of deepfry main (output came out blank)")
             break
         await asyncio.sleep(3)
     if not failed:
@@ -101,6 +103,7 @@ async def DeepfryMain(channelID, message, authorID):
         await ctx.send(f'<@{authorID}>! Your deepfrying has finished.')
         await ctx.send(f'{message} → {last}')
         UpdateLatest(last)
+        await debugchannel("Updated user-specific queue")
         if last.startswith("J!"):
             await ctx.send("Congratulations! You have found one of J's... Achievements? It will be added to the list. use `DPF!J` to see their achievements.")
             UpdateJ(last)
@@ -151,6 +154,10 @@ async def on_ready():
             for _ in range(10):
                 await client.change_presence(activity=discord.Game(name="Last Deepfry: {0} | DPF!Help".format(lastranslate)))
                 await asyncio.sleep(6)
+            
+            for _ in range(10):
+                await client.change_presence(activity=discord.Game(name="Deepfrying in {0} servers | DPF!Help".format(str(len(client.guilds)))))
+                await asyncio.sleep(6)
                 
 
 
@@ -173,7 +180,7 @@ async def Deepfry(ctx):
 
             while True:
                 queued = UpdateQueue()
-            
+                await debugchannel("Updated Public Qeuue")
                 if queued != "":
                     start = client.get_channel(int(queued["QueueChann"]))
                     await start.send(f'<@{queued["UID"]}>! I am starting your long awaited deepfry of `{queued["QueueMess"]}`!')
@@ -193,6 +200,7 @@ async def Deepfry(ctx):
             else:
                 UpdateUserQueue(ctx)
                 await ctx.send("You have successfully been queued into position {0}! Type `DPF!Queue` for your queue info.".format(userData[str(ctx.message.author.id)]["PositionInQueue"]))
+                await debugchannel("Queued User")
     else:
         await ctx.send("You have not accepted to have your data stored. When you accept, you accept that...")
         message = await ctx.send(agreementtext)
@@ -216,6 +224,7 @@ async def Accept(ctx):
             json.dump(userData, f3)
             
         await ctx.send("Registered!")
+        await debugchannel("Registered a user")
 
     else:
         await ctx.send("You have already registered.")
@@ -295,6 +304,7 @@ async def Help(ctx):
     commands = ['deepfry', 'accept', 'agreement', 'clear', 'queue', 'pos', 'help', 'cancel', 'j']
     if len(ctx.message.content.split()) == 1:
         await ctx.send(embed=discord.Embed(title="Help", colour=color)
+        .set_author(name='English Deepfrier Github', url="https://github.com/megamaz/English-Deepfrier-Bot/", icon_url="https://media.discordapp.net/attachments/741078845750247445/741410062861467718/Deepfry.png?width=677&height=677")
         .add_field(name='DPF!Deepfry [word/sentence]', value="Will deepfry the English put in as the\n `word/sentence`", inline=False)
         .add_field(name="DPF!Accept", value="Accept the agreement", inline=False)
         .add_field(name="DPF!Agreement", value="Shows the agreement", inline=False)
