@@ -303,7 +303,7 @@ async def Help(ctx):
     global color
     commands = ['deepfry', 'accept', 'agreement', 'clear', 'queue', 'pos', 'help', 'cancel', 'j']
     if len(ctx.message.content.split()) == 1:
-        await ctx.send(embed=discord.Embed(title="Help", colour=color)
+        await ctx.send(embed=discord.Embed(title=f"Help (V{data['Version']})", colour=color)
         .set_author(name='English Deepfrier Github', url="https://github.com/megamaz/English-Deepfrier-Bot/", icon_url="https://media.discordapp.net/attachments/741078845750247445/741410062861467718/Deepfry.png?width=677&height=677")
         .add_field(name='DPF!Deepfry [word/sentence]', value="Will deepfry the English put in as the\n `word/sentence`", inline=False)
         .add_field(name="DPF!Accept", value="Accept the agreement", inline=False)
