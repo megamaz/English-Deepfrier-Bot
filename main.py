@@ -354,7 +354,7 @@ async def on_message(message):
             userData[str(message.author.id)]["Username"] = str(message.author)
             with open(get_local_path('userdata.json'), 'w', encoding='utf-8') as updateusername:
                 json.dump(userData, updateusername)
-
+            await debugchannel("Updated username data for 1 user")
     await client.process_commands(message)
     
 client.run(data["Token"])
