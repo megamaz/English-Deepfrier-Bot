@@ -205,7 +205,7 @@ async def Deepfry(ctx):
         await ctx.send("You have not accepted to have your data stored. When you accept, you accept that...")
         message = await ctx.send(agreementtext)
         await asyncio.sleep(20)
-        await message.edit(content=message.content + "\n use `DPF!Accept` to agree")
+        await message.edit(content=message.content + "\nuse `DPF!Accept` to agree")
     
 @client.command()
 async def Accept(ctx):
