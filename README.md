@@ -1,7 +1,9 @@
 ![Google Translate Logo (deepfried)](https://media.discordapp.net/attachments/741078845750247445/742101680606412820/Translate2.png?width=1282&height=403)
 
 # English Deepfrier Discord Bot
- Deepfries English using Google Translate's SDK.
+"Deepfrying" English is done by taking an English input and translating it through every [Google Translate](https://translate.google.com) languages. Due to Google Translate's inconsistency with translations, the output will most likely always be largely different from the original user input.\
+*e.x: input: "Hello"\
+Output: "Great Fun"*
 
 ## Info
 - Made using [Discord.py](https://discordpy.readthedocs.io/en/latest/)
