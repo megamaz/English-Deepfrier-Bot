@@ -127,3 +127,4 @@ dmypy.json
 # Custom gitignore
 *.json
 latest.txt
+commands.txt
