@@ -1,4 +1,4 @@
-import json, discord, googletrans, asyncio, typing
+import json, discord, googletrans, asyncio, typing, os
 from discord.ext import commands
 from pathlib import Path
 
@@ -6,10 +6,19 @@ def get_local_path(filename):
     return Path(__file__).parents[0] / filename
 
 # All "with open()" are to be used with UTF-8 encoding. 
-with open(get_local_path('data.json'), 'r', encoding='utf-8') as f:
-    data : typing.Dict = json.load(f)
+if not os.path.exists(get_local_path('data.json')):
+    raise "No Data.json to launch bot"
+else:
+    with open(get_local_path('data.json'), 'r', encoding='utf-8') as f:
+        data : typing.Dict = json.load(f)
+
+if not os.path.exists(get_local_path('userdata.json')):
+    with open(get_local_path('userdata.json'), 'w') as createfile:
+        createfile.write('{"QueueLength:0}')
+        createfile.close()
 with open(get_local_path('userdata.json'), 'r', encoding='utf-8') as f2:
     userData : typing.Dict = json.load(f2)
+
 client = commands.Bot('DPF!', case_insensitive=True, help_command=None)
 isprocess = False
 currentuser = ""
@@ -28,6 +37,11 @@ Data of a-e will not be shared. only data from f will be publicly shared with no
 (Example: Playing **Last Deeprfy: 'It has grown' | DPF!Help**)
 __You will always be able to clear your data by using `DPF!Clear`__
 if you have any questions you can join the support server: [there's no support server]"""
+
+if not os.path.exists(get_local_path('latest.txt')):
+    with open(get_local_path('latest.txt'), 'w') as createfile:
+        createfile.close() # This should create a blank file
+        
 with open(get_local_path('latest.txt'), 'r', encoding='utf-8') as getlatest:
     lastranslate = getlatest.read()
 translator = googletrans.Translator()
