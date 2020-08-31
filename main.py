@@ -14,7 +14,7 @@ else:
 
 if not os.path.exists(get_local_path('userdata.json')):
     with open(get_local_path('userdata.json'), 'w') as createfile:
-        createfile.write('{"QueueLength:0}')
+        createfile.write('{"QueueLength":0}')
         createfile.close()
 with open(get_local_path('userdata.json'), 'r', encoding='utf-8') as f2:
     userData : typing.Dict = json.load(f2)
