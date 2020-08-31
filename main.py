@@ -119,7 +119,7 @@ async def DeepfryMain(channelID, message, authorID):
         UpdateLatest(last)
         await debugchannel("Updated user-specific queue")
         if last.startswith("J!"):
-            await ctx.send("Congratulations! You have found one of J's... Achievements? It will be added to the list. use `DPF!J` to see their achievements.")
+            await ctx.send("Congratulations! You have found the next piece to finding wtf J is doing. It will be added to the list. use `DPF!J` to find out what they're doing.")
             UpdateJ(last)
             await debugchannel("User had message with J")
         await asyncio.sleep(3)
@@ -353,7 +353,7 @@ async def J(ctx):
         with open(get_local_path('J.txt'), 'w') as createfile:
             createfile.close()
     with open(get_local_path('J.txt'), 'r', encoding='utf-8') as J:
-        await ctx.send(embed=discord.Embed(title="J's achievements:", description=J.read(), colour=color))
+        await ctx.send(embed=discord.Embed(title="wtf is J doing?!", description=J.read(), colour=color))
 
 @client.event
 async def on_message(message):
