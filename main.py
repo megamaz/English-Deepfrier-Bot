@@ -349,7 +349,7 @@ async def Help(ctx):
 
 @client.command()
 async def J(ctx):
-    if not os.path.exists(get_local_path('j.txt')):
+    if not os.path.exists(get_local_path('J.txt')):
         with open(get_local_path('J.txt'), 'w') as createfile:
             createfile.close()
     with open(get_local_path('J.txt'), 'r', encoding='utf-8') as J:
