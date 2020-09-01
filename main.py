@@ -115,7 +115,14 @@ async def DeepfryMain(channelID, message, authorID):
     if not failed:
         last = translator.translate(current.text, dest='en').text
         await ctx.send(f'<@{authorID}>! Your deepfrying has finished.')
-        await ctx.send(f'{message} → {last}')
+        if (len(message) + len(last) + 1) >= 2000:
+            with open(get_local_path('translation.txt'), 'w') as sendthroughfile:
+                sendthroughfile.write(f'{message} → {last}')
+                sendthroughfile.close()
+            await ctx.send(content='Trnslation was too big! Here is the text file of it.', file=discord.File(get_local_path('translation.txt')))
+            os.remove(get_local_path('translation.txt'))
+        else:
+            await ctx.send(f'{message} → {last}')
         UpdateLatest(last)
         await debugchannel("Updated user-specific queue")
         if last.startswith("J!"):
