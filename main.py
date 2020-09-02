@@ -36,7 +36,7 @@ f) To have your deepfry be put as a status
 Data of a-e will not be shared. only data from f will be publicly shared with no context, only final result.
 (Example: Playing **Last Deeprfy: 'It has grown' | DPF!Help**)
 __You will always be able to clear your data by using `DPF!Clear`__
-if you have any questions you can join the support server: [there's no support server]"""
+if you have any questions you can join the support server: https://discord.gg/terjr8A"""
 
 if not os.path.exists(get_local_path('latest.txt')):
     with open(get_local_path('latest.txt'), 'w') as createfile:
@@ -116,10 +116,10 @@ async def DeepfryMain(channelID, message, authorID):
         last = translator.translate(current.text, dest='en').text
         await ctx.send(f'<@{authorID}>! Your deepfrying has finished.')
         if (len(message) + len(last) + 1) >= 2000:
-            with open(get_local_path('translation.txt'), 'w') as sendthroughfile:
+            with open(get_local_path('translation.txt'), 'w', encoding='utf-8') as sendthroughfile:
                 sendthroughfile.write(f'{message} → {last}')
                 sendthroughfile.close()
-            await ctx.send(content='Trnslation was too big! Here is the text file of it.', file=discord.File(get_local_path('translation.txt')))
+            await ctx.send(content='Translation was too big! Here is the text file of it.', file=discord.File(get_local_path('translation.txt')))
             os.remove(get_local_path('translation.txt'))
         else:
             await ctx.send(f'{message} → {last}')
@@ -195,7 +195,7 @@ async def Deepfry(ctx):
             return
         if not isprocess:
             await ctx.send("I will deepfry your message right now. Give me about 5min.")
-            await debugchannel(f"Queue was empty and started user deepfry `{' '.join(ctx.message.content.split()[1:])}`")
+            await debugchannel(f"Queue was empty and started user deepfry")
             currentuser = str(ctx.message.author.id)
             await DeepfryMain(ctx.message.channel.id, " ".join(ctx.message.content.split()[1:]), ctx.message.author.id)
 
@@ -325,7 +325,7 @@ async def Help(ctx):
     commands = ['deepfry', 'accept', 'agreement', 'clear', 'queue', 'pos', 'help', 'cancel', 'j']
     if len(ctx.message.content.split()) == 1:
         await ctx.send(embed=discord.Embed(title=f"Help (V{data['Version']})", colour=color)
-        .set_author(name='English Deepfrier Github', url="https://github.com/megamaz/English-Deepfrier-Bot/", icon_url="https://media.discordapp.net/attachments/741078845750247445/741410062861467718/Deepfry.png?width=677&height=677")
+        .set_author(name='English Deepfrier Server', url="https://discord.gg/terjr8A", icon_url="https://media.discordapp.net/attachments/741078845750247445/741410062861467718/Deepfry.png?width=677&height=677")
         .add_field(name='DPF!Deepfry [word/sentence]', value="Will deepfry the English put in as the\n `word/sentence`", inline=False)
         .add_field(name="DPF!Accept", value="Accept the agreement", inline=False)
         .add_field(name="DPF!Agreement", value="Shows the agreement", inline=False)
