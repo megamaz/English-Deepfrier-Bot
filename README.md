@@ -7,7 +7,7 @@ Output: "Great Fun"*
 
 ## Info
 - Made using [Discord.py](https://discordpy.readthedocs.io/en/latest/)
-- [Bot invite here](https://discord.com/api/oauth2/authorize?client_id=692119694580383814&permissions=19456&scope=bot) Bot is not fully released and is still being developped. Bot will not be online 24/7 until **9/1/2020**. If you find any bugs or anything that doesn't work as expected, join the [test server](https://discord.gg/uaK3jS3) and let me know (I am `megamaz#1020`)
+- [Bot invite here](https://discord.com/api/oauth2/authorize?client_id=692119694580383814&permissions=19456&scope=bot) Bot is not fully released and is still being developped. Bot will not be online 24/7 until **9/1/2020**. If you find any bugs or anything that doesn't work as expected, join the [Support server](hhttps://discord.gg/terjr8A) and let me know (I am `megamaz#1020`)
 
 ### Extra notes
 Please do not download the code and pass it as your own.\
