@@ -12,4 +12,9 @@ Output: "Great Fun"*
 ### Extra notes
 Please do not download the code and pass it as your own.\
 All code written by [megamaz](https://github.com/megamaz/)\
-**if you would like to contribute, you can do pull requests.**
+
+## Pull requests
+If you would like to make a pull request, please follow the following instructions:
+1. Fork this repository
+1. Edit main.py and <ins>__test it__</ins>. If the pull request has not been tested, I will not merge.
+1. Make your pull request with a description that describes all additions.
