@@ -11,6 +11,9 @@ if not os.path.exists(get_local_path('data.json')):
 else:
     with open(get_local_path('data.json'), 'r', encoding='utf-8') as f:
         data : typing.Dict = json.load(f)
+if not os.path.exists(get_local_path('translates.json')):
+    with open(get_local_path('translates.json'), 'w') as createfile:
+        createfile.close()
 
 if not os.path.exists(get_local_path('userdata.json')):
     with open(get_local_path('userdata.json'), 'w') as createfile:
@@ -19,7 +22,7 @@ if not os.path.exists(get_local_path('userdata.json')):
 with open(get_local_path('userdata.json'), 'r', encoding='utf-8') as f2:
     userData : typing.Dict = json.load(f2)
 
-client = commands.Bot('DPF!', case_insensitive=True, help_command=None)
+client = commands.Bot('TST!', case_insensitive=True, help_command=None)
 isprocess = False
 currentuser = ""
 lastranslate = ''
@@ -103,6 +106,18 @@ async def DeepfryMain(channelID, message, authorID):
     last = translator.translate(current, dest='en').text
     
     failed = False
+    with open(get_local_path('translates.json'), 'r') as CheckDouble:
+        already = json.load(CheckDouble)
+        if already.get(message) != None:
+            await ctx.send("Your translation was already done by another user in the past! This saves up some time for users in queue.")
+            await ctx.send(f'{message} → {already[message]}')
+            currentuser = None
+            isprocess = False
+            authorID = str(authorID)
+            userData[authorID]["IsQueued"] = False
+            userData[authorID]["QueueChann"] = ""
+            userData[authorID]["QueueMess"] = ""
+            return
     for x in googletrans.LANGUAGES:
         current = translator.translate(last, dest=x)
         last = current.text
@@ -138,6 +153,9 @@ async def DeepfryMain(channelID, message, authorID):
     with open(get_local_path('userdata.json'), 'w', encoding='utf-8') as updatequeue2:
         json.dump(userData, updatequeue2)
     lastranslate = last
+    with open(get_local_path('translates.json'), 'w') as updateTranslates:
+        already[message] = last
+        json.dump(already, updateTranslates)
     return
 
 @client.event
