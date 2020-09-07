@@ -110,7 +110,14 @@ async def DeepfryMain(channelID, message, authorID):
         already = json.load(CheckDouble)
         if already.get(message) != None:
             await ctx.send("Your translation was already done by another user in the past! This saves up some time for users in queue.")
-            await ctx.send(f'{message} → {already[message]}')
+            if len(f'{message} → {already[message]}') >= 2000:
+                with open(get_local_path('translation.txt'), 'w', encoding='utf-8') as sendthroughfile:
+                    sendthroughfile.write(f'{message} → {last}')
+                    sendthroughfile.close()
+                await ctx.send(content='Translation was too big! Here is the text file of it.', file=discord.File(get_local_path('translation.txt')))
+                os.remove(get_local_path('translation.txt'))
+            else:
+                await ctx.send(f'{message} → {already[message]}')
             currentuser = None
             isprocess = False
             authorID = str(authorID)
