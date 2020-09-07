@@ -145,7 +145,6 @@ async def DeepfryMain(channelID, message, authorID):
             os.remove(get_local_path('translation.txt'))
         else:
             await ctx.send(f'{message} → {last}')
-        UpdateLatest(last)
         await debugchannel("Updated user-specific queue")
         if last.startswith("J!"):
             await ctx.send("Congratulations! You have found the next piece to finding wtf J is doing. It will be added to the list. use `DPF!J` to find out what they're doing.")
@@ -163,6 +162,8 @@ async def DeepfryMain(channelID, message, authorID):
     with open(get_local_path('translates.json'), 'w') as updateTranslates:
         already[message] = last
         json.dump(already, updateTranslates)
+    
+    UpdateLatest(last)
     return
 
 @client.event
