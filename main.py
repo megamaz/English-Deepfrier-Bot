@@ -22,7 +22,7 @@ if not os.path.exists(get_local_path('userdata.json')):
 with open(get_local_path('userdata.json'), 'r', encoding='utf-8') as f2:
     userData : typing.Dict = json.load(f2)
 
-client = commands.Bot('TST!', case_insensitive=True, help_command=None)
+client = commands.Bot('DPF!', case_insensitive=True, help_command=None)
 isprocess = False
 currentuser = ""
 lastranslate = ''
