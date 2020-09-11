@@ -22,7 +22,7 @@ if not os.path.exists(get_local_path('userdata.json')):
 with open(get_local_path('userdata.json'), 'r', encoding='utf-8') as f2:
     userData : typing.Dict = json.load(f2)
 
-client = commands.Bot('DPF!', case_insensitive=True, help_command=None)
+client = commands.Bot('TST!', case_insensitive=True, help_command=None)
 isprocess = False
 currentuser = ""
 lastranslate = ''
@@ -360,6 +360,7 @@ async def Help(ctx):
         .add_field(name="DPF!Help", value="Gives you this list", inline=False)
         .add_field(name="DPF!Cancel", value="Cancels your item in queue. (if you\n wish to change your sentence, just use\n the DPF!Deepfry command.)\n")
         .add_field(name='DPF!J', value='Shows deepfries starting with `J!`', inline=False)
+        .add_field(name='DPF!Ping', value="Gives you the bot's latency.", inline=False)
         .add_field(name="Exetra Notes:", value="1. You will get better results with sentences\nrather than words\n2. If you are queued, you can change your\nrequest using the `DPF!Deepfry` command", inline=False))
     else:
         if ctx.message.content.split()[1].lower() not in commands:
@@ -388,10 +389,15 @@ async def J(ctx):
             createfile.close()
     with open(get_local_path('J.txt'), 'r', encoding='utf-8') as J:
         await ctx.send(embed=discord.Embed(title="wtf is J doing?!", description=J.read(), colour=color))
-
+@client.command()
+async def Ping(ctx):
+    await ctx.send(f"The Bot's current latency: {client.latency}ms")
+@client.command()
+async def Latency(ctx):
+    await Ping(ctx)
 @client.event
 async def on_message(message):
-    commands = ['deepfry', 'accept', 'agreement', 'clear', 'queue', 'pos', 'help', 'cancel', 'j']
+    commands = ['deepfry', 'accept', 'agreement', 'clear', 'queue', 'pos', 'help', 'cancel', 'j', 'ping', 'latency']
     if message.content.startswith('DPF!') and message.content.split()[0].split("!")[1].lower() not in commands:
         await message.channel.send("Command '{0}' not found.".format(message.content.split()[0].split("!")[1].lower()))
     
