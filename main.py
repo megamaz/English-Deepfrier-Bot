@@ -7,7 +7,8 @@ def get_local_path(filename):
 
 # All "with open()" are to be used with UTF-8 encoding. 
 if not os.path.exists(get_local_path('data.json')):
-    raise "No Data.json to launch bot"
+    print("No Data.json to launch bot")
+    quit()
 else:
     with open(get_local_path('data.json'), 'r', encoding='utf-8') as f:
         data : typing.Dict = json.load(f)
@@ -27,6 +28,7 @@ isprocess = False
 currentuser = ""
 lastranslate = ''
 isrunning = False
+debugchannel = None
 agreementtext = """
 
 a) user ID Will be saved for queueing system
@@ -164,7 +166,6 @@ async def DeepfryMain(channelID, message, authorID):
         json.dump(already, updateTranslates)
     
     UpdateLatest(last)
-    return
 
 @client.event
 async def on_ready():
@@ -199,7 +200,10 @@ async def on_ready():
                 await asyncio.sleep(6)
                 
             for _ in range(10):
-                await client.change_presence(activity=discord.Game(name="Last Deepfry: {0} | DPF!Help".format(lastranslate)))
+                if len(lastranslate) > 15:
+                    await client.change_presence(activity=discord.Game(name="Last Deepfry: [UNAVAILABLE] | DPF!Help"))
+                else:
+                    await client.change_presence(activity=discord.Game(name="Last Deepfry: {0} | DPF!Help".format(lastranslate)))
                 await asyncio.sleep(6)
             
             for _ in range(10):
