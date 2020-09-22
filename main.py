@@ -395,7 +395,7 @@ async def J(ctx):
         await ctx.send(embed=discord.Embed(title="wtf is J doing?!", description=J.read(), colour=color))
 @client.command()
 async def Ping(ctx):
-    await ctx.send(f"The Bot's current latency: {client.latency}ms")
+    await ctx.send(f"The Bot's current latency: {round(client.latency*1000)}ms")
 @client.command()
 async def Latency(ctx):
     await Ping(ctx)
