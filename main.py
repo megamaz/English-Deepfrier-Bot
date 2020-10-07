@@ -412,11 +412,11 @@ async def Latency(ctx):
 
 @client.command()
 async def GitHub(ctx):
-    await ctx.send(embed=discord.Embed(title="GitHub repository for EDB", description="The GitHub can be found [here](https://github.com/megamaz/english-deepfrier-bot)! You can do pull requests if you like."))
+    await ctx.send(embed=discord.Embed(title="GitHub repository for EDB", description="The GitHub can be found [here](https://github.com/megamaz/english-deepfrier-bot)! You can do pull requests if you like.", colour=color))
 
 @client.event
 async def on_message(message):
-    commands = ['deepfry', 'accept', 'agreement', 'clear', 'queue', 'pos', 'help', 'cancel', 'j', 'ping', 'latency']
+    commands = ['deepfry', 'accept', 'agreement', 'clear', 'queue', 'pos', 'help', 'cancel', 'j', 'ping', 'latency', 'github']
     if message.content.startswith('DPF!') and message.content.split()[0].split("!")[1].lower() not in commands:
         await message.channel.send("Command '{0}' not found.".format(message.content.split()[0].split("!")[1].lower()))
     if userData.get(str(message.author.id)) != None:
