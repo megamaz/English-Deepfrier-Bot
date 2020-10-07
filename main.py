@@ -243,6 +243,8 @@ async def Deepfry(ctx):
                     await debugchannel(f"Continued Deepfry queue: `{' '.join(ctx.message.content.split()[1:])}`")
                     await DeepfryMain(start.id, userData[queued["UID"]]["QueueMess"], queued["UID"])
                 else:
+                    await debugchannel("Queue emptied.")
+                    currentuser = ""
                     break
                 
         else:
@@ -407,12 +409,16 @@ async def Ping(ctx):
 @client.command()
 async def Latency(ctx):
     await Ping(ctx)
+
+@client.command()
+async def GitHub(ctx):
+    await ctx.send(embed=discord.Embed(title="GitHub repository for EDB", description="The GitHub can be found [here](https://github.com/megamaz/english-deepfrier-bot)! You can do pull requests if you like."))
+
 @client.event
 async def on_message(message):
     commands = ['deepfry', 'accept', 'agreement', 'clear', 'queue', 'pos', 'help', 'cancel', 'j', 'ping', 'latency']
     if message.content.startswith('DPF!') and message.content.split()[0].split("!")[1].lower() not in commands:
         await message.channel.send("Command '{0}' not found.".format(message.content.split()[0].split("!")[1].lower()))
-    
     if userData.get(str(message.author.id)) != None:
         if userData[str(message.author.id)].get("Username") != None:
             if userData[str(message.author.id)]["Username"] != str(message.author):
