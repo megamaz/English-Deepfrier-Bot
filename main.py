@@ -1,4 +1,4 @@
-import json, discord, googletrans, asyncio, typing, os
+import json, discord, googletrans, asyncio, typing, os, statcord
 from discord.ext import commands
 from pathlib import Path
 
@@ -43,6 +43,11 @@ Data of a-e will not be shared. only data from f will be publicly shared with no
 __You will always be able to clear your data by using `DPF!Clear`__
 if you have any questions you can join the support server: https://discord.gg/terjr8A"""
 
+
+# Statcord Setup
+key = data["StatcordKey"]
+api = statcord.Client(client,key)
+api.start_loop()
 if not os.path.exists(get_local_path('latest.txt')):
     with open(get_local_path('latest.txt'), 'w') as createfile:
         createfile.close() # This should create a blank file
@@ -253,7 +258,7 @@ async def Deepfry(ctx):
                 await ctx.send("You have successfully been queued into position {0}! Type `DPF!Queue` for your queue info.".format(userData[str(ctx.message.author.id)]["PositionInQueue"]))
                 await debugchannel("Queued User")
     else:
-        await ctx.send("You have not accepted to have your data stored. When you accept, you accept that...")
+        await ctx.send("You have not accepted to have your data stored. View `DPF!Agreement` to view what you are accepting.")
         message = await ctx.send(agreementtext)
         await asyncio.sleep(20)
         await message.edit(content=message.content + "\nuse `DPF!Accept` to agree")
@@ -296,7 +301,7 @@ async def Queue(ctx):
             .set_footer(text='English Deepfrier', icon_url="https://media.discordapp.net/attachments/741078845750247445/741410062861467718/Deepfry.png?width=677&height=677"))
         else:
             if currentuser == str(ctx.message.author.id):
-                await ctx.send("Your message is curently being deepfried.")
+                await ctx.send("Your message is curently being deepfried. ")
             else:
                 await ctx.send("You aren't queued.")
 @client.command()
@@ -396,6 +401,9 @@ async def J(ctx):
 @client.command()
 async def Ping(ctx):
     await ctx.send(f"The Bot's current latency: {round(client.latency*1000)}ms")
+    if round(client.latency*1000) > 150:
+        await debugchannel(f"<@604079048758394900> bot detected unusually high latency: {round(client.latency*1000)}")
+        await ctx.send("Bot detected unusually high latency! creator has been let known.")
 @client.command()
 async def Latency(ctx):
     await Ping(ctx)
@@ -417,5 +425,9 @@ async def on_message(message):
                 json.dump(userData, updateusername)
             await debugchannel("Updated username data for 1 user")
     await client.process_commands(message)
-    
+
+# Statcord Setup
+@client.event
+async def on_command(ctx):
+    api.command_run(ctx)
 client.run(data["Token"])
