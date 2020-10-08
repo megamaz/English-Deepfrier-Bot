@@ -29,8 +29,9 @@ currentuser = ""
 lastranslate = ''
 isrunning = False
 debugchannel = None
+translator = googletrans.Translator()
+color = discord.Color.from_rgb(54, 171, 255)
 agreementtext = """
-
 a) user ID Will be saved for queueing system
 b) be pinged whenever deepfrying is complete
 c) Message data will be stored
@@ -41,6 +42,7 @@ f) To have your deepfry be put as a status
 Data of a-e will not be shared. only data from f will be publicly shared with no context, only final result.
 (Example: Playing **Last Deeprfy: 'It has grown' | DPF!Help**)
 __You will always be able to clear your data by using `DPF!Clear`__
+
 if you have any questions you can join the support server: https://discord.gg/terjr8A"""
 
 
@@ -48,19 +50,6 @@ if you have any questions you can join the support server: https://discord.gg/te
 key = data["StatcordKey"]
 api = statcord.Client(client,key)
 api.start_loop()
-if not os.path.exists(get_local_path('latest.txt')):
-    with open(get_local_path('latest.txt'), 'w') as createfile:
-        createfile.close() # This should create a blank file
-        
-with open(get_local_path('latest.txt'), 'r', encoding='utf-8') as getlatest:
-    lastranslate = getlatest.read()
-translator = googletrans.Translator()
-
-color = discord.Color.from_rgb(54, 171, 255)
-def UpdateLatest(latest):
-    with open(get_local_path('latest.txt'), 'w', encoding='utf-8') as update:
-        update.write(latest)
-        update.close()
     
 def UpdateJ(j):
     with open(get_local_path('J.txt'), 'r', encoding='utf-8') as GetJ:
@@ -167,10 +156,9 @@ async def DeepfryMain(channelID, message, authorID):
         json.dump(userData, updatequeue2)
     lastranslate = last
     with open(get_local_path('translates.json'), 'w') as updateTranslates:
-        already[message] = last
         json.dump(already, updateTranslates)
     
-    UpdateLatest(last)
+
 
 @client.event
 async def on_ready():
@@ -195,25 +183,19 @@ async def on_ready():
     await startchann.send("was bot already running: {0}".format(isrunning))
     if not isrunning:
         isrunning = True
-        while True:
-            for _ in range(10):
-                await client.change_presence(activity=discord.Game(name="Queue: {0} | DPF!Help".format(userData["QueueLength"])))
-                await asyncio.sleep(6)
-                
-            for _ in range(10):
-                await client.change_presence(activity=discord.Game(name="{0} Registered users | DPF!Help".format(len(userData)-1)))
-                await asyncio.sleep(6)
-                
-            for _ in range(10):
-                if len(lastranslate) > 15:
-                    await client.change_presence(activity=discord.Game(name="Last Deepfry: [UNAVAILABLE] | DPF!Help"))
-                else:
-                    await client.change_presence(activity=discord.Game(name="Last Deepfry: {0} | DPF!Help".format(lastranslate)))
-                await asyncio.sleep(6)
-            
-            for _ in range(10):
-                await client.change_presence(activity=discord.Game(name="Deepfrying in {0} servers | DPF!Help".format(str(len(client.guilds)))))
-                await asyncio.sleep(6)
+        try:
+            while True:
+                for _ in range(10):
+                    await client.change_presence(activity=discord.Game(name="Queue: {0} | DPF!Help".format(userData["QueueLength"])))
+                    await asyncio.sleep(6)
+                for _ in range(10):
+                    await client.change_presence(activity=discord.Game(name="{0} Registered users | DPF!Help".format(len(userData)-1)))
+                    await asyncio.sleep(6)
+                for _ in range(10):
+                    await client.change_presence(activity=discord.Game(name="Deepfrying in {0} servers | DPF!Help".format(str(len(client.guilds)))))
+                    await asyncio.sleep(6)
+        except:
+            await asyncio.sleep(10)
                 
 
 
@@ -429,7 +411,7 @@ async def on_message(message):
             userData[str(message.author.id)]["Username"] = str(message.author)
             with open(get_local_path('userdata.json'), 'w', encoding='utf-8') as updateusername:
                 json.dump(userData, updateusername)
-            await debugchannel("Updated username data for 1 user")
+        await debugchannel("Updated username data for 1 user")
     await client.process_commands(message)
 
 # Statcord Setup
