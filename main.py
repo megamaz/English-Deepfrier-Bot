@@ -29,7 +29,7 @@ currentuser = ""
 lastranslate = ''
 isrunning = False
 debugchannel = None
-translator = googletrans.Translator()
+translator = googletrans.Translator("translate.google.com")
 color = discord.Color.from_rgb(54, 171, 255)
 agreementtext = """
 a) user ID Will be saved for queueing system
@@ -179,22 +179,21 @@ async def on_ready():
     print(f"{data['Name']} is online and usable")
     startchann = client.get_channel(data["Test Channel"])
     debugchannel = lambda x : startchann.send(x)
-    await startchann.send("Ran on_ready")
-    await startchann.send("was bot already running: {0}".format(isrunning))
     if not isrunning:
         isrunning = True
         try:
             while True:
-                for _ in range(10):
+                for _ in range(6):
                     await client.change_presence(activity=discord.Game(name="Queue: {0} | DPF!Help".format(userData["QueueLength"])))
-                    await asyncio.sleep(6)
-                for _ in range(10):
+                    await asyncio.sleep(10)
+                for _ in range(6):
                     await client.change_presence(activity=discord.Game(name="{0} Registered users | DPF!Help".format(len(userData)-1)))
-                    await asyncio.sleep(6)
-                for _ in range(10):
+                    await asyncio.sleep(10)
+                for _ in range(6):
                     await client.change_presence(activity=discord.Game(name="Deepfrying in {0} servers | DPF!Help".format(str(len(client.guilds)))))
-                    await asyncio.sleep(6)
+                    await asyncio.sleep(10)
         except:
+            debugchannel("Bot messed up the status :/")
             await asyncio.sleep(10)
                 
 
