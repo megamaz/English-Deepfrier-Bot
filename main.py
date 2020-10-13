@@ -158,7 +158,17 @@ async def DeepfryMain(channelID, message, authorID):
     with open(get_local_path('translates.json'), 'w') as updateTranslates:
         json.dump(already, updateTranslates)
     
-
+async def Status():
+    while True:
+        for _ in range(6):
+            await client.change_presence(activity=discord.Game(name=f"Queue: {userData['QueueLength']} | DPF!Help"))
+            await asyncio.sleep(10)
+        for _ in range(6):
+            await client.change_presence(activity=discord.Game(name=f"{len(userData)-1} Registered users | DPF!Help"))
+            await asyncio.sleep(10)
+        for _ in range(6):
+            await client.change_presence(activity=discord.Game(name=f"Deepfrying in {len(client.guilds)} servers | DPF!Help"))
+            await asyncio.sleep(10)
 
 @client.event
 async def on_ready():
@@ -181,20 +191,7 @@ async def on_ready():
     debugchannel = lambda x : startchann.send(x)
     if not isrunning:
         isrunning = True
-        try:
-            while True:
-                for _ in range(6):
-                    await client.change_presence(activity=discord.Game(name="Queue: {0} | DPF!Help".format(userData["QueueLength"])))
-                    await asyncio.sleep(10)
-                for _ in range(6):
-                    await client.change_presence(activity=discord.Game(name="{0} Registered users | DPF!Help".format(len(userData)-1)))
-                    await asyncio.sleep(10)
-                for _ in range(6):
-                    await client.change_presence(activity=discord.Game(name="Deepfrying in {0} servers | DPF!Help".format(str(len(client.guilds)))))
-                    await asyncio.sleep(10)
-        except:
-            debugchannel("Bot messed up the status :/")
-            await asyncio.sleep(10)
+        await Status()
                 
 
 
