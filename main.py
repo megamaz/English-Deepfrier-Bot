@@ -29,6 +29,7 @@ currentuser = ""
 lastranslate = ''
 isrunning = False
 debugchannel = None
+status_down = False
 translator = googletrans.Translator("translate.google.com")
 color = discord.Color.from_rgb(54, 171, 255)
 agreementtext = """
@@ -189,10 +190,14 @@ async def on_ready():
     print(f"{data['Name']} is online and usable")
     startchann = client.get_channel(data["Test Channel"])
     debugchannel = lambda x : startchann.send(x)
+    
     if not isrunning:
         isrunning = True
-        await Status()
-                
+        try:
+            await Status()
+        except Exception as e:
+            await debugchannel(f"Status messed up: {e} please restart it. <@604079048758394900>")
+            status_down = True
 
 
 @client.command()
@@ -341,7 +346,7 @@ async def Help(ctx):
     if len(ctx.message.content.split()) == 1:
         await ctx.send(embed=discord.Embed(title=f"Help (V{data['Version']})", colour=color)
         .set_author(name='English Deepfrier Server', url="https://discord.gg/terjr8A", icon_url="https://media.discordapp.net/attachments/741078845750247445/741410062861467718/Deepfry.png?width=677&height=677")
-        .add_field(name='DPF!Deepfry [word/sentence]', value="Will deepfry the English put in as the\n `word/sentence`", inline=False)
+        .add_field(name='DPF!Deepfry [word/sentence] (lang amount)', value="Will deepfry the English put in as the\n `word/sentence`", inline=False)
         .add_field(name="DPF!Accept", value="Accept the agreement", inline=False)
         .add_field(name="DPF!Agreement", value="Shows the agreement", inline=False)
         .add_field(name="DPF!Clear", value="Clears user data", inline=False)
@@ -350,6 +355,7 @@ async def Help(ctx):
         .add_field(name="DPF!Cancel", value="Cancels your item in queue. (if you\n wish to change your sentence, just use\n the DPF!Deepfry command.)\n")
         .add_field(name='DPF!J', value='Shows deepfries starting with `J!`', inline=False)
         .add_field(name='DPF!Ping', value="Gives you the bot's latency.", inline=False)
+        .add_field(name='DPF!GitHub', value='Links you to En. Deepfrier GitHub repo!', inline=False)
         .add_field(name="Exetra Notes:", value="1. You will get better results with sentences\nrather than words\n2. If you are queued, you can change your\nrequest using the `DPF!Deepfry` command", inline=False))
     else:
         if ctx.message.content.split()[1].lower() not in commands:
@@ -409,6 +415,13 @@ async def on_message(message):
                 json.dump(userData, updateusername)
         await debugchannel("Updated username data for 1 user")
     await client.process_commands(message)
+
+    # Dev commands
+    if str(message.content).startswith(client.command_prefix()) and int(message.author.id) == 604079048758394900: # 604079048758394900 is my user ID lol
+        if str(message.content).split('!')[1] == 'status' and status_down:
+            await Status()
+            await message.channel.send("Status successfully restarted.")
+
 
 # Statcord Setup
 @client.event
