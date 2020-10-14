@@ -30,8 +30,7 @@ lastranslate = ''
 isrunning = False
 debugchannel = None
 status_down = False
-translator = googletrans.Translator("translate.google.us")
-googletrans.LANGCODES
+translator = googletrans.Translator()
 color = discord.Color.from_rgb(54, 171, 255)
 agreementtext = """
 a) user ID Will be saved for queueing system
