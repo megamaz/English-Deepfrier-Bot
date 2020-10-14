@@ -30,7 +30,7 @@ lastranslate = ''
 isrunning = False
 debugchannel = None
 status_down = False
-translator = googletrans.Translator("'translate.google.us")
+translator = googletrans.Translator("translate.google.us")
 googletrans.LANGCODES
 color = discord.Color.from_rgb(54, 171, 255)
 agreementtext = """
