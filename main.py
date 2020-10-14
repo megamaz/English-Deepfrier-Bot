@@ -30,7 +30,8 @@ lastranslate = ''
 isrunning = False
 debugchannel = None
 status_down = False
-translator = googletrans.Translator("translate.google.com")
+translator = googletrans.Translator("'translate.google.us")
+googletrans.LANGCODES
 color = discord.Color.from_rgb(54, 171, 255)
 agreementtext = """
 a) user ID Will be saved for queueing system
@@ -413,11 +414,11 @@ async def on_message(message):
             userData[str(message.author.id)]["Username"] = str(message.author)
             with open(get_local_path('userdata.json'), 'w', encoding='utf-8') as updateusername:
                 json.dump(userData, updateusername)
-        await debugchannel("Updated username data for 1 user")
+            await debugchannel("Updated username data for 1 user")
     await client.process_commands(message)
 
     # Dev commands
-    if str(message.content).startswith(client.command_prefix()) and int(message.author.id) == 604079048758394900: # 604079048758394900 is my user ID lol
+    if str(message.content).startswith(client.command_prefix) and int(message.author.id) == 604079048758394900: # 604079048758394900 is my user ID lol
         if str(message.content).split('!')[1] == 'status' and status_down:
             await Status()
             await message.channel.send("Status successfully restarted.")
