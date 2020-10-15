@@ -70,7 +70,8 @@ def UpdateUserQueue(ctx):
 
         json.dump(userData, updateQueue)
 async def GetCommands(author):
-    if not client.is_owner(author):
+    check_owner = await client.is_owner(author)
+    if not check_owner:
         return ['deepfry', 'accept', 'agreement', 'clear', 'queue', 'pos', 'help', 'cancel', 'j', 'ping', 'latency', 'github']
     else:
         return ['deepfry', 'accept', 'agreement', 'clear', 'queue', 'pos', 'help', 'cancel', 'j', 'ping', 'latency', 'github', 'statusfix']
