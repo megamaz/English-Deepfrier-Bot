@@ -30,7 +30,7 @@ lastranslate = ''
 isrunning = False
 debugchannel = None
 status_down = False
-translator = googletrans.Translator()
+translator = googletrans.Translator(service_urls=['translate.google.com'])
 color = discord.Color.from_rgb(54, 171, 255)
 agreementtext = """
 a) user ID Will be saved for queueing system
@@ -161,15 +161,15 @@ async def DeepfryMain(channelID, message, authorID):
     
 async def Status():
     while True:
-        for _ in range(6):
+        for _ in range(4):
             await client.change_presence(activity=discord.Game(name=f"Queue: {userData['QueueLength']} | DPF!Help"))
-            await asyncio.sleep(10)
-        for _ in range(6):
+            await asyncio.sleep(15)
+        for _ in range(4):
             await client.change_presence(activity=discord.Game(name=f"{len(userData)-1} Registered users | DPF!Help"))
-            await asyncio.sleep(10)
-        for _ in range(6):
+            await asyncio.sleep(15)
+        for _ in range(4):
             await client.change_presence(activity=discord.Game(name=f"Deepfrying in {len(client.guilds)} servers | DPF!Help"))
-            await asyncio.sleep(10)
+            await asyncio.sleep(15)
 
 @client.event
 async def on_ready():
@@ -177,6 +177,7 @@ async def on_ready():
     global lastranslate
     global isrunning
     global debugchannel
+    global status_down
     with open(get_local_path('userdata.json'), 'w', encoding='utf-8') as clearqueue:
         userData["QueueLength"] = 0
         for x in userData:
@@ -376,6 +377,18 @@ async def Help(ctx):
                 await ctx.send("I mean, this one is obvious. You're using it right now.")
             elif command == 'cancel':
                 await ctx.send("Cancel your queued message.\n*e.x: DPF!Cancel*")
+            elif command == 'j':
+                await ctx.send("Shows deepfries that start with J.")
+            elif command == 'Ping':
+                await ctx.send("Shows the bot's latency")
+            elif command == 'Github':
+                await ctx.send("Links you ED GitHub page.")
+            
+
+            elif command == 'dev' and client.is_owner(ctx.author):
+                await ctx.send(embed=discord.Embed(name='Dev Commands', descriptio='Commands that only the creator of this bot can run.')
+                .add_field(name='DPF!StatusFix', value="Restarts the bot's status.", inline=False)
+                .add_field(name='DPF!Help dev', value='This list. Only the dev can show the dev help.', inline=False))
 
 @client.command()
 async def J(ctx):
@@ -400,7 +413,10 @@ async def GitHub(ctx):
 
 @client.event
 async def on_message(message):
-    commands = ['deepfry', 'accept', 'agreement', 'clear', 'queue', 'pos', 'help', 'cancel', 'j', 'ping', 'latency', 'github']
+    if not client.is_owner(message.author):
+        commands = ['deepfry', 'accept', 'agreement', 'clear', 'queue', 'pos', 'help', 'cancel', 'j', 'ping', 'latency', 'github']
+    else:
+        commands = ['deepfry', 'accept', 'agreement', 'clear', 'queue', 'pos', 'help', 'cancel', 'j', 'ping', 'latency', 'github', 'statusfix']
     if message.content.startswith('DPF!') and message.content.split()[0].split("!")[1].lower() not in commands:
         await message.channel.send("Command '{0}' not found.".format(message.content.split()[0].split("!")[1].lower()))
     if userData.get(str(message.author.id)) != None:
@@ -416,11 +432,13 @@ async def on_message(message):
             await debugchannel("Updated username data for 1 user")
     await client.process_commands(message)
 
-    # Dev commands
-    if str(message.content).startswith(client.command_prefix) and int(message.author.id) == 604079048758394900: # 604079048758394900 is my user ID lol
-        if str(message.content).split('!')[1] == 'status' and status_down:
-            await Status()
-            await message.channel.send("Status successfully restarted.")
+
+# Dev commands beneath here.
+@client.command()
+async def statusFix(ctx):
+    if client.is_owner(ctx.author) and status_down:
+        await Status()
+        await ctx.send("Status successfully restarted.")
 
 
 # Statcord Setup
