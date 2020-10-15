@@ -1,4 +1,4 @@
-import json, discord, googletrans, asyncio, typing, os, statcord
+import json, discord, googletrans, asyncio, typing, os, statcord, random
 from discord.ext import commands
 from pathlib import Path
 
@@ -391,7 +391,7 @@ async def Help(ctx):
             
 
             elif command == 'dev' and client.is_owner(ctx.author):
-                await ctx.send(embed=discord.Embed(name='Dev Commands', descriptio='Commands that only the creator of this bot can run.')
+                await ctx.send(embed=discord.Embed(colour=color, title='Dev Commands', descriptio='Commands that only the creator of this bot can run.')
                 .add_field(name='DPF!StatusFix', value="Restarts the bot's status.", inline=False)
                 .add_field(name='DPF!Help dev', value='This list. Only the dev can show the dev help.', inline=False))
 
@@ -442,7 +442,10 @@ async def statusFix(ctx):
         await Status()
         await ctx.send("Status successfully restarted.")
 
-
+@client.command()
+async def dev(ctx):
+    if client.is_owner(ctx.author):
+        await ctx.send(random.choice("You're the owner of this bot.|I am under your command.|You own me.|Not sure what you expect.|So you used this command. nice|skabalibaboolibidibidaskelebeldbaldsdbflsdlfkjsdflkjsdjfldsjf bom bedeleloom boom. IM A SKAT MAN!|Dev|Dev|Dev|Dev".splti("|")))
 # Statcord Setup
 @client.event
 async def on_command(ctx):
