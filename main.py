@@ -74,7 +74,7 @@ async def GetCommands(author):
     if not check_owner:
         return ['deepfry', 'accept', 'agreement', 'clear', 'queue', 'pos', 'help', 'cancel', 'j', 'ping', 'latency', 'github']
     else:
-        return ['deepfry', 'accept', 'agreement', 'clear', 'queue', 'pos', 'help', 'cancel', 'j', 'ping', 'latency', 'github', 'statusfix']
+        return ['deepfry', 'accept', 'agreement', 'clear', 'queue', 'pos', 'help', 'cancel', 'j', 'ping', 'latency', 'github', 'statusfix', 'dev']
 def UpdateQueue():
     with open(get_local_path('userdata.json'), 'r', encoding='utf-8') as getfile:
         queue = json.load(getfile)
