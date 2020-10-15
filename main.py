@@ -69,7 +69,7 @@ def UpdateUserQueue(ctx):
         userData[str(ctx.message.author.id)]["QueueChann"] = str(ctx.message.channel.id)
 
         json.dump(userData, updateQueue)
-def GetCommands(author):
+async def GetCommands(author):
     if not client.is_owner(author):
         return ['deepfry', 'accept', 'agreement', 'clear', 'queue', 'pos', 'help', 'cancel', 'j', 'ping', 'latency', 'github']
     else:
@@ -347,7 +347,7 @@ async def Agreement(ctx):
 @client.command()
 async def Help(ctx):
     global color
-    commands = GetCommands(ctx.author)
+    commands = await GetCommands(ctx.author)
     if len(ctx.message.content.split()) == 1:
         await ctx.send(embed=discord.Embed(title=f"Help (V{data['Version']})", colour=color)
         .set_author(name='English Deepfrier Server', url="https://discord.gg/terjr8A", icon_url="https://media.discordapp.net/attachments/741078845750247445/741410062861467718/Deepfry.png?width=677&height=677")
@@ -417,7 +417,7 @@ async def GitHub(ctx):
 
 @client.event
 async def on_message(message):
-    commands = GetCommands(message.author)
+    commands = await GetCommands(message.author)
     if message.content.startswith('DPF!') and message.content.split()[0].split("!")[1].lower() not in commands:
         await message.channel.send("Command '{0}' not found.".format(message.content.split()[0].split("!")[1].lower()))
     if userData.get(str(message.author.id)) != None:
