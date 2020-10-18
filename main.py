@@ -29,6 +29,7 @@ currentuser = ""
 lastranslate = ''
 isrunning = False
 debugchannel = None
+languages = 0
 status_down = False
 translator = googletrans.Translator(service_urls=['translate.google.com'])
 color = discord.Color.from_rgb(54, 171, 255)
@@ -98,13 +99,13 @@ async def DeepfryMain(channelID, message, authorID):
     global translator
     global lastranslate
     global currentuser
+    global languages
     isprocess = True
     currentuser = str(authorID)
     ctx = client.get_channel(channelID)
 
     current = message
     last = translator.translate(current, dest='en').text
-    
     failed = False
     with open(get_local_path('translates.json'), 'r') as CheckDouble:
         already = json.load(CheckDouble)
@@ -133,6 +134,7 @@ async def DeepfryMain(channelID, message, authorID):
             failed = True
             await debugchannel("Failed translation of deepfry main (output came out blank)")
             break
+        languages += 1
         await asyncio.sleep(3)
     if not failed:
         last = translator.translate(current.text, dest='en').text
@@ -156,6 +158,7 @@ async def DeepfryMain(channelID, message, authorID):
     userData[authorID]["QueueChann"] = ""
     userData[authorID]["QueueMess"] = ""
     isprocess = False
+    languages = 0
     with open(get_local_path('userdata.json'), 'w', encoding='utf-8') as updatequeue2:
         json.dump(userData, updatequeue2)
     lastranslate = last
@@ -272,6 +275,7 @@ async def Accept(ctx):
 
 @client.command()
 async def Queue(ctx):
+    global languages
     if userData.get(str(ctx.message.author.id)) == None:
         await ctx.send("You have not yet registered and aren't queued.")
     else:
@@ -279,13 +283,13 @@ async def Queue(ctx):
             userqueuepos = userData[str(ctx.message.author.id)]["PositionInQueue"]
             await ctx.send(embed=discord.Embed(title="Queue", colour=color)
             .add_field(name="Your Position in queue:", value=str(userqueuepos), inline=False)
-            .add_field(name="Total time expectancy:", value=str((int(userqueuepos)*5) + 5) + "min", inline=False)
+            .add_field(name="Total time expectancy:", value=f'approx: {int(5*(userData[str(ctx.author.id)]["PositionInQueue"])-(3*languages)/60)} minutes ', inline=False)
             .add_field(name="Total queue length:", value=str(userData["QueueLength"]), inline=False)
             .add_field(name="Your Queued Message:", value=userData[str(ctx.message.author.id)]["QueueMess"], inline=False)
             .set_footer(text='English Deepfrier', icon_url="https://media.discordapp.net/attachments/741078845750247445/741410062861467718/Deepfry.png?width=677&height=677"))
         else:
             if currentuser == str(ctx.message.author.id):
-                await ctx.send("Your message is curently being deepfried. ")
+                await ctx.send(f"Your message is curently being deepfried. {languages}/107 languages done. ({int(100*(languages/107))}% complete)")
             else:
                 await ctx.send("You aren't queued.")
 @client.command()
