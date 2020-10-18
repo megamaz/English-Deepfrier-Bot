@@ -34,14 +34,12 @@ translator = googletrans.Translator(service_urls=['translate.google.com'])
 color = discord.Color.from_rgb(54, 171, 255)
 agreementtext = """
 a) user ID Will be saved for queueing system
-b) be pinged whenever deepfrying is complete
-c) Message data will be stored
-d) Channel ID will be stored
-e) Username will be saved
-f) To have your deepfry be put as a status
+b) Be pinged whenever deepfrying is complete
+c) Message content data will be stored
+d) Channel will be stored
+e) Username will be stored
 
-Data of a-e will not be shared. only data from f will be publicly shared with no context, only final result.
-(Example: Playing **Last Deeprfy: 'It has grown' | DPF!Help**)
+No data will ever be shared to the public at any time.
 __You will always be able to clear your data by using `DPF!Clear`__
 
 if you have any questions you can join the support server: https://discord.gg/terjr8A"""
@@ -166,15 +164,19 @@ async def DeepfryMain(channelID, message, authorID):
     
 async def Status():
     while True:
-        for _ in range(4):
-            await client.change_presence(activity=discord.Game(name=f"Queue: {userData['QueueLength']} | DPF!Help"))
-            await asyncio.sleep(15)
-        for _ in range(4):
-            await client.change_presence(activity=discord.Game(name=f"{len(userData)-1} Registered users | DPF!Help"))
-            await asyncio.sleep(15)
-        for _ in range(4):
-            await client.change_presence(activity=discord.Game(name=f"Deepfrying in {len(client.guilds)} servers | DPF!Help"))
-            await asyncio.sleep(15)
+        try:
+            for _ in range(4):
+                await client.change_presence(activity=discord.Game(name=f"Queue: {userData['QueueLength']} | DPF!Help"))
+                await asyncio.sleep(15)
+            for _ in range(4):
+                await client.change_presence(activity=discord.Game(name=f"{len(userData)-1} Registered users | DPF!Help"))
+                await asyncio.sleep(15)
+            for _ in range(4):
+                await client.change_presence(activity=discord.Game(name=f"Deepfrying in {len(client.guilds)} servers | DPF!Help"))
+                await asyncio.sleep(15)
+        except Exception as error:
+            await debugchannel(f"Stauts got fucked. Restarting in 60sec. Reason: `{error}` <@604079048758394900>")
+            await asyncio.sleep(60)
 
 @client.event
 async def on_ready():
@@ -197,13 +199,7 @@ async def on_ready():
     startchann = client.get_channel(data["Test Channel"])
     debugchannel = lambda x : startchann.send(x)
     
-    if not isrunning:
-        isrunning = True
-        try:
-            await Status()
-        except Exception as e:
-            await debugchannel(f"Status messed up: {e} please restart it. <@604079048758394900>")
-            status_down = True
+    await Status()
 
 
 @client.command()
@@ -437,15 +433,15 @@ async def on_message(message):
 
 # Dev commands beneath here.
 @client.command()
-async def statusFix(ctx):
-    if client.is_owner(ctx.author) and status_down:
+async def statusFix(ctx): # Status manual overide in case it gets fucked.
+    if await client.is_owner(ctx.author):
         await Status()
         await ctx.send("Status successfully restarted.")
 
 @client.command()
 async def dev(ctx):
-    if client.is_owner(ctx.author):
-        await ctx.send(random.choice("You're the owner of this bot.|I am under your command.|You own me.|Not sure what you expect.|So you used this command. nice|skabalibaboolibidibidaskelebeldbaldsdbflsdlfkjsdflkjsdjfldsjf bom bedeleloom boom. IM A SKAT MAN!|Dev|Dev|Dev|Dev".splti("|")))
+    if await client.is_owner(ctx.author):
+        await ctx.send(random.choice("You're the owner of this bot.|I am under your command.|You own me.|Not sure what you expect.|So you used this command. nice|skabalibaboolibidibidaskelebeldbaldsdbflsdlfkjsdflkjsdjfldsjf bom bedeleloom boom. IM A SKAT MAN!|Dev|Dev|Dev|Dev".split("|")))
 # Statcord Setup
 @client.event
 async def on_command(ctx):
