@@ -245,10 +245,7 @@ async def Deepfry(ctx):
                 await ctx.send("You have successfully been queued into position {0}! Type `DPF!Queue` for your queue info.".format(userData[str(ctx.message.author.id)]["PositionInQueue"]))
                 await debugchannel("Queued User")
     else:
-        await ctx.send("You have not accepted to have your data stored. View `DPF!Agreement` to view what you are accepting.")
-        message = await ctx.send(agreementtext)
-        await asyncio.sleep(20)
-        await message.edit(content=message.content + "\nuse `DPF!Accept` to agree")
+        await ctx.send("You have not accepted to have your data stored. When you accept using `DPF!Accept`, you accept that...\n" + agreementtext + '\n*You can always review this agreement using `DPF!Agreement`*')
     
 @client.command()
 async def Accept(ctx):
