@@ -256,7 +256,7 @@ async def Accept(ctx):
         "IsQueued":False,
         "QueueMess": "",
         "QueueChann":"",
-        "UID":str(ctx.message.author.id),
+        "UID":str(ctx.message.author.id), # yes im storing the User ID inside of the User ID. This is how fucking stupid I am.
         "Username":str(ctx.message.author)
         }
         
