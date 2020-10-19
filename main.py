@@ -381,15 +381,16 @@ async def Help(ctx):
                 await ctx.send("Cancel your queued message.\n*e.x: DPF!Cancel*")
             elif command == 'j':
                 await ctx.send("Shows deepfries that start with J.")
-            elif command == 'Ping':
+            elif command == 'ping':
                 await ctx.send("Shows the bot's latency")
-            elif command == 'Github':
+            elif command == 'github':
                 await ctx.send("Links you ED GitHub page.")
             
 
             elif command == 'dev' and client.is_owner(ctx.author):
                 await ctx.send(embed=discord.Embed(colour=color, title='Dev Commands', descriptio='Commands that only the creator of this bot can run.')
-                .add_field(name='DPF!StatusFix', value="Restarts the bot's status.", inline=False)
+                .add_field(name='DPF!StatusFix', value="Manual override of the bot's status. **DOES NOT CHECK IF STATUS IS DOWN.**", inline=False)
+                .add_field(name='DPF!Dev', value='I might make this command useful at one point. idk', inline=False)
                 .add_field(name='DPF!Help dev', value='This list. Only the dev can show the dev help.', inline=False))
 
 @client.command()
