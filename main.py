@@ -109,7 +109,7 @@ async def DeepfryMain(channelID, message, authorID):
     failed = False
     with open(get_local_path('translates.json'), 'r') as CheckDouble:
         already = json.load(CheckDouble)
-        if already.get(message) != None:
+        if already.get(message.lower()) != None:
             await ctx.send("Your translation was already done by another user in the past! This saves up some time for users in queue.")
             if len(f'{message} → {already[message]}') >= 2000:
                 with open(get_local_path('translation.txt'), 'w', encoding='utf-8') as sendthroughfile:
@@ -147,6 +147,7 @@ async def DeepfryMain(channelID, message, authorID):
             os.remove(get_local_path('translation.txt'))
         else:
             await ctx.send(f'{message} → {last}')
+            already[message.lower()] = last
         await debugchannel("Updated user-specific queue")
         if last.startswith("J!"):
             await ctx.send("Congratulations! You have found the next piece to finding wtf J is doing. It will be added to the list. use `DPF!J` to find out what they're doing.")
@@ -280,10 +281,11 @@ async def Queue(ctx):
         await ctx.send("You have not yet registered and aren't queued.")
     else:
         if bool(userData[str(ctx.message.author.id)]["IsQueued"]):
+            timeexpect = int(5*(userData[str(ctx.author.id)]["PositionInQueue"])-(3*languages)/60) if int(5*(userData[str(ctx.author.id)]["PositionInQueue"])-(3*languages)/60) > 1 else "<1" # the shittiest one liner I've ever done
             userqueuepos = userData[str(ctx.message.author.id)]["PositionInQueue"]
             await ctx.send(embed=discord.Embed(title="Queue", colour=color)
             .add_field(name="Your Position in queue:", value=str(userqueuepos), inline=False)
-            .add_field(name="Total time expectancy:", value=f'approx: {int(5*(userData[str(ctx.author.id)]["PositionInQueue"])-(3*languages)/60)} minutes ', inline=False)
+            .add_field(name="Total time until your turn:", value=f'approx: {timeexpect} minutes ', inline=False)
             .add_field(name="Total queue length:", value=str(userData["QueueLength"]), inline=False)
             .add_field(name="Your Queued Message:", value=userData[str(ctx.message.author.id)]["QueueMess"], inline=False)
             .set_footer(text='English Deepfrier', icon_url="https://media.discordapp.net/attachments/741078845750247445/741410062861467718/Deepfry.png?width=677&height=677"))
