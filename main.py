@@ -73,7 +73,7 @@ async def GetCommands(author):
     if not check_owner:
         return ['deepfry', 'accept', 'agreement', 'clear', 'queue', 'pos', 'help', 'cancel', 'j', 'ping', 'latency', 'github']
     else:
-        return ['deepfry', 'accept', 'agreement', 'clear', 'queue', 'pos', 'help', 'cancel', 'j', 'ping', 'latency', 'github', 'statusfix', 'dev']
+        return ['deepfry', 'accept', 'agreement', 'clear', 'queue', 'pos', 'help', 'cancel', 'j', 'ping', 'latency', 'github', 'statusfix', 'dev', 'servers']
 def UpdateQueue():
     with open(get_local_path('userdata.json'), 'r', encoding='utf-8') as getfile:
         queue = json.load(getfile)
@@ -285,7 +285,7 @@ async def Queue(ctx):
             userqueuepos = userData[str(ctx.message.author.id)]["PositionInQueue"]
             await ctx.send(embed=discord.Embed(title="Queue", colour=color)
             .add_field(name="Your Position in queue:", value=str(userqueuepos), inline=False)
-            .add_field(name="Total time until your turn:", value=f'approx: {timeexpect} minutes ', inline=False)
+            .add_field(name="Approx time until your turn:", value=f'{timeexpect} minutes ', inline=False)
             .add_field(name="Total queue length:", value=str(userData["QueueLength"]), inline=False)
             .add_field(name="Your Queued Message:", value=userData[str(ctx.message.author.id)]["QueueMess"], inline=False)
             .set_footer(text='English Deepfrier', icon_url="https://media.discordapp.net/attachments/741078845750247445/741410062861467718/Deepfry.png?width=677&height=677"))
@@ -419,6 +419,8 @@ async def GitHub(ctx):
 @client.event
 async def on_message(message):
     commands = await GetCommands(message.author)
+    await client.process_commands(message)
+
     if message.content.startswith('DPF!') and message.content.split()[0].split("!")[1].lower() not in commands:
         await message.channel.send("Command '{0}' not found.".format(message.content.split()[0].split("!")[1].lower()))
     if userData.get(str(message.author.id)) != None:
@@ -432,7 +434,6 @@ async def on_message(message):
             with open(get_local_path('userdata.json'), 'w', encoding='utf-8') as updateusername:
                 json.dump(userData, updateusername)
             await debugchannel("Updated username data for 1 user")
-    await client.process_commands(message)
 
 
 # Dev commands beneath here.
@@ -444,10 +445,22 @@ async def statusFix(ctx): # Status manual overide in case it gets fucked.
 
 @client.command()
 async def dev(ctx):
+    pass
+
+@client.command()
+async def servers(ctx):
     if await client.is_owner(ctx.author):
-        await ctx.send(random.choice("You're the owner of this bot.|I am under your command.|You own me.|Not sure what you expect.|So you used this command. nice|skabalibaboolibidibidaskelebeldbaldsdbflsdlfkjsdflkjsdjfldsjf bom bedeleloom boom. IM A SKAT MAN!|Dev|Dev|Dev|Dev".split("|")))
+        await ctx.send(f'{client.user} is in {len(client.guilds)} servers.')
+
+@client.command()
+async def userdata(ctx):
+    if await client.is_owner(ctx.author):
+        await ctx.author.send(file=discord.File(get_local_path('userdata.json')), content='Here is the user data.')
+
+
+
 # Statcord Setup
 @client.event
 async def on_command(ctx):
     api.command_run(ctx)
-client.run(data["Token"])
+client.run(data["MainToken"])
