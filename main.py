@@ -43,7 +43,7 @@ e) Username will be stored
 No data will ever be shared to the public at any time.
 __You will always be able to clear your data by using `DPF!Clear`__
 
-if you have any questions you can join the support server: https://discord.gg/terjr8A"""
+if you have any questions you can join the support server: discord.gg/DnSAvXjStF"""
 
 
 # Statcord Setup
@@ -350,7 +350,7 @@ async def Help(ctx):
     commands = await GetCommands(ctx.author)
     if len(ctx.message.content.split()) == 1:
         await ctx.send(embed=discord.Embed(title=f"Help (V{data['Version']})", colour=color)
-        .set_author(name='English Deepfrier Server', url="https://discord.gg/terjr8A", icon_url="https://media.discordapp.net/attachments/741078845750247445/741410062861467718/Deepfry.png?width=677&height=677")
+        .set_author(name='English Deepfrier Server', url="discord.gg/DnSAvXjStF", icon_url="https://media.discordapp.net/attachments/741078845750247445/741410062861467718/Deepfry.png?width=677&height=677")
         .add_field(name='DPF!Deepfry [word/sentence] (lang amount)', value="Will deepfry the English put in as the\n `word/sentence`", inline=False)
         .add_field(name="DPF!Accept", value="Accept the agreement", inline=False)
         .add_field(name="DPF!Agreement", value="Shows the agreement", inline=False)
@@ -463,4 +463,4 @@ async def userdata(ctx):
 @client.event
 async def on_command(ctx):
     api.command_run(ctx)
-client.run(data["MainToken"])
+client.run(data["Token"])
