@@ -481,12 +481,14 @@ async def userdata(ctx):
 
 @client.command()
 async def pause(ctx):
+    global isPaused
     if await client.is_owner(ctx.author):
         await ctx.send("All deepfries have been paused.")
         isPaused = True
 
 @client.command()
 async def Continue(ctx):
+    global isPaused
     if await client.is_owner(ctx.author):
         await ctx.send("Unpaused deepfries.")
         isPaused = False
