@@ -24,6 +24,7 @@ with open(get_local_path('userdata.json'), 'r', encoding='utf-8') as f2:
     userData : typing.Dict = json.load(f2)
 
 client = commands.Bot('DPF!', case_insensitive=True, help_command=None)
+isPaused = False
 isprocess = False
 currentuser = ""
 lastranslate = ''
@@ -129,6 +130,8 @@ async def DeepfryMain(channelID, message, authorID):
                 userData[str(authorID)]["QueueMess"] = ""
                 return
         for x in googletrans.LANGUAGES:
+            if isPaused:
+                raise BaseException("Deepfry has been terminated.")
             current = translator.translate(last, dest=x)
             last = current.text
             if last == '':
@@ -232,23 +235,28 @@ async def Deepfry(ctx):
             await ctx.send("Please only include words in your message (no mentions, channels etc...) ")
             return
         if not isprocess:
-            await ctx.send("I will deepfry your message right now. Give me about 5min.")
-            await debugchannel(f"Queue was empty and started user deepfry")
-            currentuser = str(ctx.message.author.id)
-            await DeepfryMain(ctx.message.channel.id, " ".join(ctx.message.content.split()[1:]), ctx.message.author.id)
+            if not isPaused:
+                await ctx.send("I will deepfry your message right now. Give me about 5min.")
+                await debugchannel(f"Queue was empty and started user deepfry")
+                currentuser = str(ctx.message.author.id)
+                await DeepfryMain(ctx.message.channel.id, " ".join(ctx.message.content.split()[1:]), ctx.message.author.id)
 
-            while True:
-                queued = UpdateQueue()
-                await debugchannel("Updated Public Qeuue")
-                if queued != "":
-                    start = client.get_channel(int(queued["QueueChann"]))
-                    await start.send(f'<@{queued["UID"]}>! I am starting your long awaited deepfry of `{queued["QueueMess"]}`!')
-                    await debugchannel(f"Continued Deepfry queue: `{' '.join(ctx.message.content.split()[1:])}`")
-                    await DeepfryMain(start.id, userData[queued["UID"]]["QueueMess"], queued["UID"])
-                else:
-                    await debugchannel("Queue emptied.")
-                    currentuser = ""
-                    break
+                while True:
+                    if isPaused:
+                        break
+                    queued = UpdateQueue()
+                    await debugchannel("Updated Public Qeuue")
+                    if queued != "":
+                        start = client.get_channel(int(queued["QueueChann"]))
+                        await start.send(f'<@{queued["UID"]}>! I am starting your long awaited deepfry of `{queued["QueueMess"]}`!')
+                        await debugchannel(f"Continued Deepfry queue: `{' '.join(ctx.message.content.split()[1:])}`")
+                        await DeepfryMain(start.id, userData[queued["UID"]]["QueueMess"], queued["UID"])
+                    else:
+                        await debugchannel("Queue emptied.")
+                        currentuser = ""
+                        break
+            else:
+                await ctx.send("Deepfrying has been paused until further notice. This is likely due to the bot being timed out from Google Translate services.")
                 
         else:
             if currentuser == str(ctx.message.author.id):
@@ -471,6 +479,17 @@ async def userdata(ctx):
     if await client.is_owner(ctx.author):
         await ctx.author.send(file=discord.File(get_local_path('userdata.json')), content='Here is the user data.')
 
+@client.command()
+async def pause(ctx):
+    if await client.is_owner(ctx.author):
+        await ctx.send("All deepfries have been paused.")
+        isPaused = True
+
+@client.command()
+async def Continue(ctx):
+    if await client.is_owner(ctx.author):
+        await ctx.send("Unpaused deepfries.")
+        isPaused = False
 
 
 # Statcord Setup
