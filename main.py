@@ -94,77 +94,91 @@ def UpdateQueue():
         json.dump(userData, updatePublicQueue)    
         return returnvalue
 
+# BUG area keeps bugging out for some reasons. I added a try-except-finally to know what's going wrong.
 async def DeepfryMain(channelID, message, authorID):
-    global isprocess
-    global translator
-    global lastranslate
-    global currentuser
-    global languages
-    isprocess = True
-    currentuser = str(authorID)
-    ctx = client.get_channel(channelID)
+    try:
+        global isprocess
+        global translator
+        global lastranslate
+        global currentuser
+        global languages
+        isprocess = True
+        currentuser = str(authorID)
+        ctx = client.get_channel(channelID)
 
-    current = message
-    last = translator.translate(current, dest='en').text
-    failed = False
-    with open(get_local_path('translates.json'), 'r') as CheckDouble:
-        already = json.load(CheckDouble)
-        if already.get(message.lower()) != None:
-            await ctx.send("Your translation was already done by another user in the past! This saves up some time for users in queue.")
-            if len(f'{message} → {already[message]}') >= 2000:
+        current = message
+        last = translator.translate(current, dest='en').text
+        failed = False
+        with open(get_local_path('translates.json'), 'r') as CheckDouble:
+            already = json.load(CheckDouble)
+            if already.get(message.lower()) != None:
+                await ctx.send("Your translation was already done by another user in the past! This saves up some time for users in queue.")
+                if len(f'{message} → {already[message]}') >= 2000:
+                    with open(get_local_path('translation.txt'), 'w', encoding='utf-8') as sendthroughfile:
+                        sendthroughfile.write(f'{message} → {last}')
+                        sendthroughfile.close()
+                    await ctx.send(content='Translation was too big! Here is the text file of it.', file=discord.File(get_local_path('translation.txt')))
+                    os.remove(get_local_path('translation.txt'))
+                else:
+                    await ctx.send(f'{message} → {already[message]}')
+                currentuser = None
+                isprocess = False
+                authorID = str(authorID)
+                userData[authorID]["IsQueued"] = False
+                userData[authorID]["QueueChann"] = ""
+                userData[authorID]["QueueMess"] = ""
+                return
+        for x in googletrans.LANGUAGES:
+            current = translator.translate(last, dest=x)
+            last = current.text
+            if last == '':
+                await ctx.send(f"<@{authorID}> your translation failed! Please try another one / later :(")
+                failed = True
+                await debugchannel("Failed translation of deepfry main (output came out blank)")
+                break
+            languages += 1
+            await asyncio.sleep(3)
+        if not failed:
+            last = translator.translate(current.text, dest='en').text
+            await ctx.send(f'<@{authorID}>! Your deepfrying has finished.')
+            if (len(message) + len(last) + 1) >= 2000:
                 with open(get_local_path('translation.txt'), 'w', encoding='utf-8') as sendthroughfile:
                     sendthroughfile.write(f'{message} → {last}')
                     sendthroughfile.close()
                 await ctx.send(content='Translation was too big! Here is the text file of it.', file=discord.File(get_local_path('translation.txt')))
                 os.remove(get_local_path('translation.txt'))
             else:
-                await ctx.send(f'{message} → {already[message]}')
-            currentuser = None
-            isprocess = False
-            authorID = str(authorID)
-            userData[authorID]["IsQueued"] = False
-            userData[authorID]["QueueChann"] = ""
-            userData[authorID]["QueueMess"] = ""
-            return
-    for x in googletrans.LANGUAGES:
-        current = translator.translate(last, dest=x)
-        last = current.text
-        if last == '':
-            await ctx.send(f"<@{authorID}> your translation failed! Please try another one / later :(")
-            failed = True
-            await debugchannel("Failed translation of deepfry main (output came out blank)")
-            break
-        languages += 1
-        await asyncio.sleep(3)
-    if not failed:
-        last = translator.translate(current.text, dest='en').text
-        await ctx.send(f'<@{authorID}>! Your deepfrying has finished.')
-        if (len(message) + len(last) + 1) >= 2000:
-            with open(get_local_path('translation.txt'), 'w', encoding='utf-8') as sendthroughfile:
-                sendthroughfile.write(f'{message} → {last}')
-                sendthroughfile.close()
-            await ctx.send(content='Translation was too big! Here is the text file of it.', file=discord.File(get_local_path('translation.txt')))
-            os.remove(get_local_path('translation.txt'))
-        else:
-            await ctx.send(f'{message} → {last}')
-            already[message.lower()] = last
-        await debugchannel("Updated user-specific queue")
-        if last.startswith("J!"):
-            await ctx.send("Congratulations! You have found the next piece to finding wtf J is doing. It will be added to the list. use `DPF!J` to find out what they're doing.")
-            UpdateJ(last)
-            await debugchannel("User had message with J")
-        await asyncio.sleep(3)
-    authorID = str(authorID)
-    userData[authorID]["IsQueued"] = False
-    userData[authorID]["QueueChann"] = ""
-    userData[authorID]["QueueMess"] = ""
-    isprocess = False
-    languages = 0
-    with open(get_local_path('userdata.json'), 'w', encoding='utf-8') as updatequeue2:
-        json.dump(userData, updatequeue2)
-    lastranslate = last
-    with open(get_local_path('translates.json'), 'w') as updateTranslates:
-        json.dump(already, updateTranslates)
+                await ctx.send(f'{message} → {last}')
+                already[message.lower()] = last
+            await debugchannel("Updated user-specific queue")
+            if last.startswith("J!"):
+                await ctx.send("Congratulations! You have found the next piece to finding wtf J is doing. It will be added to the list. use `DPF!J` to find out what they're doing.")
+                UpdateJ(last)
+                await debugchannel("User had message with J")
+            await asyncio.sleep(3)
+        authorID = str(authorID)
+        userData[authorID]["IsQueued"] = False
+        userData[authorID]["QueueChann"] = ""
+        userData[authorID]["QueueMess"] = ""
+        isprocess = False
+        languages = 0
+        with open(get_local_path('userdata.json'), 'w', encoding='utf-8') as updatequeue2:
+            json.dump(userData, updatequeue2)
+        lastranslate = last
+        with open(get_local_path('translates.json'), 'w') as updateTranslates:
+            json.dump(already, updateTranslates)
+    except Exception as error:
+        await debugchannel("Error in DeepfryMain: `{0}`".format(error))
+    
+    finally:
+        await ctx.send(f"<@{authorID}> I'm sorry but your deepfrying failed. The creator has been let known of the error. :(")
+        languages = 0
+        isprocess = False
+        userData[authorID]["IsQueued"] = False
+        userData[authorID]["QueueChann"] = ""
+        userData[authorID]["QueueMess"] = ""
+        with open(get_local_path('userdata.json'), 'w', encoding='utf-8') as updatequeue2:
+            json.dump(userData, updatequeue2)
     
 async def Status():
     while True:
