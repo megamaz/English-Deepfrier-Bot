@@ -124,9 +124,9 @@ async def DeepfryMain(channelID, message, authorID):
                 currentuser = None
                 isprocess = False
                 authorID = str(authorID)
-                userData[authorID]["IsQueued"] = False
-                userData[authorID]["QueueChann"] = ""
-                userData[authorID]["QueueMess"] = ""
+                userData[str(authorID)]["IsQueued"] = False
+                userData[str(authorID)]["QueueChann"] = ""
+                userData[str(authorID)]["QueueMess"] = ""
                 return
         for x in googletrans.LANGUAGES:
             current = translator.translate(last, dest=x)
@@ -174,9 +174,9 @@ async def DeepfryMain(channelID, message, authorID):
         await ctx.send(f"<@{authorID}> I'm sorry but your deepfrying failed. The creator has been let known of the error. :(")
         languages = 0
         isprocess = False
-        userData[authorID]["IsQueued"] = False
-        userData[authorID]["QueueChann"] = ""
-        userData[authorID]["QueueMess"] = ""
+        userData[str(authorID)]["IsQueued"] = False
+        userData[str(authorID)]["QueueChann"] = ""
+        userData[str(authorID)]["QueueMess"] = ""
         with open(get_local_path('userdata.json'), 'w', encoding='utf-8') as updatequeue2:
             json.dump(userData, updatequeue2)
     
